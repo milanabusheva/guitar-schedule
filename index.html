@@ -64,7 +64,6 @@
             color: rgba(255, 255, 255, 0.25);
         }
 
-        /* ===== РАСПИСАНИЕ ===== */
         .schedule {
             display: flex;
             flex-direction: column;
@@ -109,7 +108,6 @@
             margin-left: 10px;
         }
 
-        /* ===== СТРАНИЦА ПЕСЕН ===== */
         .back {
             display: inline-block;
             margin: 10px 0 20px;
@@ -173,6 +171,16 @@
             color: rgba(255, 255, 255, 0.8);
             white-space: pre-wrap;
             font-family: Georgia, serif;
+            margin-bottom: 20px;
+        }
+
+        .edit-hint {
+            font-size: 14px;
+            color: rgba(255, 255, 255, 0.15);
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            padding-top: 16px;
+            margin-top: 10px;
+            font-style: italic;
         }
 
         .page {
@@ -229,19 +237,16 @@
             <input type="text" id="searchInput" placeholder="Найти исполнителя..." oninput="applyFilter()" />
         </div>
 
-        <!-- ===== ГЛАВНАЯ ===== -->
         <div id="pageMain" class="page">
             <div id="schedule" class="schedule"></div>
         </div>
 
-        <!-- ===== ПЕСНИ ===== -->
         <div id="pageSongs" class="page hidden">
             <button class="back" onclick="goHome()">← Назад к расписанию</button>
             <div id="artistTitle" style="font-size:32px;color:#ffd866;font-weight:700;"></div>
             <div id="songsList"></div>
         </div>
 
-        <!-- ===== ТЕКСТ ===== -->
         <div id="pageLyrics" class="page hidden">
             <button class="back" onclick="goToSongs()">← Назад к песням</button>
             <div class="lyrics-box fade">
@@ -255,87 +260,119 @@
 
     <script>
         // =============================================================
-        // ДАННЫЕ
+        // РАСПИСАНИЕ
         // =============================================================
 
         const SCHEDULE = [
-            { time: "20:00", name: "Саня Hellraiser Захарчук" },
-            { time: "20:15", name: "Рыжкова Екатерина Алексеевна" },
-            { time: "20:25", name: "Курносов Владимир Александрович" },
+            { time: "20:00", name: "Саня Захрачук" },
+            { time: "20:15", name: "Рыжкова Екатерина" },
+            { time: "20:25", name: "Курносов Владимир" },
             { time: "20:35", name: "Вера Благовещенская" },
-            { time: "20:45", name: "Савватеев Михаил Алексеевич" },
-            { time: "21:00", name: "Зильберштейн Арпине + Аракелян Екатерина" },
-            { time: "21:15", name: "Ананьев Владислав Антонович" },
-            { time: "21:25", name: "Куприянова Софья Андреевна" },
-            { time: "21:32", name: "Завадский Дмитрий" },
-            { time: "21:45", name: "Каменный Лев (группа)" },
-            { time: "22:00", name: "Алан Б" },
-            { time: "22:15", name: "Поминов Денис Игоревич" },
-            { time: "22:25", name: "ОМБ (Определённо Может Быть)" },
-            { time: "22:45", name: "Гельдыев Ахмет" }
+            { time: "20:45", name: "Сергеев Владимир" },
+            { time: "20:55", name: "Зильберштейн Арпине + Аракелян Екатерина" },
+            { time: "21:07", name: "Ананьев Владислав" },
+            { time: "21:17", name: "Куприянова Софья" },
+            { time: "21:23", name: "Капустин Егор" },
+            { time: "21:30", name: "Завадский Дмитрий" },
+            { time: "21:40", name: "Каменный Лев" },
+            { time: "21:53", name: "Савватеев Михаил" },
+            { time: "22:05", name: "Алан Б" },
+            { time: "22:20", name: "Поминов Денис" },
+            { time: "22:30", name: "Определённо может быть" },
+            { time: "22:50", name: "Гельдыев Ахмет" }
         ];
 
         // =============================================================
-        // ПЕСНИ (привязаны по ИМЕНИ исполнителя)
+        // ПЕСНИ (с полем lyrics для текста)
         // =============================================================
 
         const SONGS = [
-            { artist: "Саня Hellraiser Захарчук", title: "Dance Me to the End of Love", author: "Leonard Cohen" },
-            { artist: "Саня Hellraiser Захарчук", title: "Tears Don't Fall", author: "Bullet for My Valentine" },
-            { artist: "Саня Hellraiser Захарчук", title: "Из окна", author: "Noize MC" },
-            { artist: "Саня Hellraiser Захарчук", title: "Морок", author: "Я" },
-            { artist: "Гельдыев Ахмет", title: "Мама я люблю", author: "авторская" },
-            { artist: "Гельдыев Ахмет", title: "Супермаркет", author: "авторская" },
-            { artist: "Гельдыев Ахмет", title: "Курильщикам трудно без плана", author: "авторская" },
-            { artist: "Гельдыев Ахмет", title: "Sign of the times", author: "кавер" },
-            { artist: "Рыжкова Екатерина Алексеевна", title: "Потерянный рай", author: "Ария" },
-            { artist: "Рыжкова Екатерина Алексеевна", title: "Я свободен", author: "Ария" },
-            { artist: "Рыжкова Екатерина Алексеевна", title: "Нева", author: "5nizza" },
-            { artist: "Курносов Владимир Александрович", title: "Е=mc²", author: "Ундервуд" },
-            { artist: "Курносов Владимир Александрович", title: "Гагарин, я Вас любила", author: "Ундервуд" },
-            { artist: "Курносов Владимир Александрович", title: "Кукушка", author: "Кино" },
-            { artist: "Савватеев Михаил Алексеевич", title: "Марш Небесных Связистов", author: "Олег Медведев" },
-            { artist: "Савватеев Михаил Алексеевич", title: "Марафонец", author: "Смешарики" },
-            { artist: "Савватеев Михаил Алексеевич", title: "Белое Безмолвие", author: "Высоцкий" },
-            { artist: "Савватеев Михаил Алексеевич", title: "Стеклянный Господин", author: "Никитины" },
-            { artist: "Ананьев Владислав Антонович", title: "Девочка пай", author: "Михаил Круг" },
-            { artist: "Ананьев Владислав Антонович", title: "Мое сердце", author: "Сплин" },
-            { artist: "Ананьев Владислав Антонович", title: "Милые зеленые глаза", author: "Муцураев" },
-            { artist: "Каменный Лев (группа)", title: "Временно", author: "авторская" },
-            { artist: "Каменный Лев (группа)", title: "Теряюсь", author: "авторская" },
-            { artist: "Каменный Лев (группа)", title: "Поезда", author: "авторская" },
-            { artist: "Зильберштейн Арпине + Аракелян Екатерина", title: "Mer Siro Ashuny", author: "Ruben Hakhverdyan" },
-            { artist: "Зильберштейн Арпине + Аракелян Екатерина", title: "Aravind, Arevin", author: "Lava Eli" },
-            { artist: "Зильберштейн Арпине + Аракелян Екатерина", title: "Bari Aragil", author: "Serj Tankian" },
-            { artist: "Зильберштейн Арпине + Аракелян Екатерина", title: "Ari Erb Ush e", author: "Armine Hayrapetyan" },
-            { artist: "Куприянова Софья Андреевна", title: "Young And Beautiful", author: "Lana Del Rey" },
-            { artist: "Куприянова Софья Андреевна", title: "Riptide", author: "Vance Joy" },
-            { artist: "Алан Б", title: "Свои песни", author: "авторские" },
-            { artist: "Вера Благовещенская", title: "Я бью женщин и детей", author: "Валентин Стрыкало" },
-            { artist: "Вера Благовещенская", title: "Дешевые драмы", author: "Валентин Стрыкало" },
-            { artist: "Вера Благовещенская", title: "Рустэм", author: "Валентин Стрыкало" },
-            { artist: "Поминов Денис Игоревич", title: "92", author: "Стрыкало" },
-            { artist: "Поминов Денис Игоревич", title: "Улыбнись", author: "Cupsize" },
-            { artist: "Поминов Денис Игоревич", title: "Что-то авторское", author: "авторское" },
-            { artist: "Завадский Дмитрий", title: "Ля-ля тополя", author: "Би-2" },
-            { artist: "Завадский Дмитрий", title: "Чувства", author: "Animal ДжаZ" },
-            { artist: "Завадский Дмитрий", title: "Просвистела", author: "ДДТ" },
-            { artist: "Сергеев Владимир Алексеевич", title: "Романс-Диктофон", author: "—" },
-            { artist: "Сергеев Владимир Алексеевич", title: "Корсары-Йовин", author: "—" },
-            { artist: "Сергеев Владимир Алексеевич", title: "Я тебе не верю", author: "Григорий Лепс" },
-            { artist: "Капустин Егор Дмитриевич", title: "Весна", author: "4 Позиции Бруно" },
-            { artist: "Капустин Егор Дмитриевич", title: "Супермен", author: "КРУПНОГАБАРИТНЫЕ ОТХОДЫ" },
-            { artist: "Капустин Егор Дмитриевич", title: "Бетон с молоком", author: "КРУПНОГАБАРИТНЫЕ ОТХОДЫ" },
-            { artist: "ОМБ (Определённо Может Быть)", title: "Авторская музыка с площадок", author: "авторская" }
+            // Саня Захрачук
+            { artist: "Саня Захрачук", title: "Dance Me to the End of Love", author: "Leonard Cohen", lyrics: "" },
+            { artist: "Саня Захрачук", title: "Tears Don't Fall", author: "Bullet for My Valentine", lyrics: "" },
+            { artist: "Саня Захрачук", title: "Из окна", author: "Noize MC", lyrics: "" },
+            { artist: "Саня Захрачук", title: "Морок", author: "Я", lyrics: "" },
+
+            // Рыжкова Екатерина
+            { artist: "Рыжкова Екатерина", title: "Потерянный рай", author: "Ария", lyrics: "" },
+            { artist: "Рыжкова Екатерина", title: "Я свободен", author: "Ария", lyrics: "" },
+            { artist: "Рыжкова Екатерина", title: "Нева", author: "5nizza", lyrics: "" },
+
+            // Курносов Владимир
+            { artist: "Курносов Владимир", title: "Е=mc²", author: "Ундервуд", lyrics: "" },
+            { artist: "Курносов Владимир", title: "Гагарин, я Вас любила", author: "Ундервуд", lyrics: "" },
+            { artist: "Курносов Владимир", title: "Кукушка", author: "Кино", lyrics: "" },
+
+            // Вера Благовещенская
+            { artist: "Вера Благовещенская", title: "Я бью женщин и детей", author: "Валентин Стрыкало", lyrics: "" },
+            { artist: "Вера Благовещенская", title: "Дешевые драмы", author: "Валентин Стрыкало", lyrics: "" },
+            { artist: "Вера Благовещенская", title: "Рустэм", author: "Валентин Стрыкало", lyrics: "" },
+
+            // Сергеев Владимир
+            { artist: "Сергеев Владимир", title: "Романс-Диктофон", author: "—", lyrics: "" },
+            { artist: "Сергеев Владимир", title: "Корсары-Йовин", author: "—", lyrics: "" },
+            { artist: "Сергеев Владимир", title: "Я тебе не верю", author: "Григорий Лепс", lyrics: "" },
+
+            // Зильберштейн Арпине + Аракелян Екатерина
+            { artist: "Зильберштейн Арпине + Аракелян Екатерина", title: "Mer Siro Ashuny", author: "Ruben Hakhverdyan", lyrics: "" },
+            { artist: "Зильберштейн Арпине + Аракелян Екатерина", title: "Aravind, Arevin", author: "Lava Eli", lyrics: "" },
+            { artist: "Зильберштейн Арпине + Аракелян Екатерина", title: "Bari Aragil", author: "Serj Tankian", lyrics: "" },
+            { artist: "Зильберштейн Арпине + Аракелян Екатерина", title: "Ari Erb Ush e", author: "Armine Hayrapetyan", lyrics: "" },
+
+            // Ананьев Владислав
+            { artist: "Ананьев Владислав", title: "Девочка пай", author: "Михаил Круг", lyrics: "" },
+            { artist: "Ананьев Владислав", title: "Мое сердце", author: "Сплин", lyrics: "" },
+            { artist: "Ананьев Владислав", title: "Милые зеленые глаза", author: "Муцураев", lyrics: "" },
+
+            // Куприянова Софья
+            { artist: "Куприянова Софья", title: "Young And Beautiful", author: "Lana Del Rey", lyrics: "" },
+            { artist: "Куприянова Софья", title: "Riptide", author: "Vance Joy", lyrics: "" },
+
+            // Капустин Егор
+            { artist: "Капустин Егор", title: "Весна", author: "4 Позиции Бруно", lyrics: "" },
+            { artist: "Капустин Егор", title: "Супермен", author: "КРУПНОГАБАРИТНЫЕ ОТХОДЫ", lyrics: "" },
+            { artist: "Капустин Егор", title: "Бетон с молоком", author: "КРУПНОГАБАРИТНЫЕ ОТХОДЫ", lyrics: "" },
+
+            // Завадский Дмитрий
+            { artist: "Завадский Дмитрий", title: "Ля-ля тополя", author: "Би-2", lyrics: "" },
+            { artist: "Завадский Дмитрий", title: "Чувства", author: "Animal ДжаZ", lyrics: "" },
+            { artist: "Завадский Дмитрий", title: "Просвистела", author: "ДДТ", lyrics: "" },
+
+            // Каменный Лев
+            { artist: "Каменный Лев", title: "Временно", author: "авторская", lyrics: "" },
+            { artist: "Каменный Лев", title: "Теряюсь", author: "авторская", lyrics: "" },
+            { artist: "Каменный Лев", title: "Поезда", author: "авторская", lyrics: "" },
+
+            // Савватеев Михаил
+            { artist: "Савватеев Михаил", title: "Марш Небесных Связистов", author: "Олег Медведев", lyrics: "" },
+            { artist: "Савватеев Михаил", title: "Марафонец", author: "Смешарики", lyrics: "" },
+            { artist: "Савватеев Михаил", title: "Белое Безмолвие", author: "Высоцкий", lyrics: "" },
+            { artist: "Савватеев Михаил", title: "Стеклянный Господин", author: "Никитины", lyrics: "" },
+
+            // Алан Б
+            { artist: "Алан Б", title: "Свои песни", author: "авторские", lyrics: "" },
+
+            // Поминов Денис
+            { artist: "Поминов Денис", title: "92", author: "Стрыкало", lyrics: "" },
+            { artist: "Поминов Денис", title: "Улыбнись", author: "Cupsize", lyrics: "" },
+            { artist: "Поминов Денис", title: "Что-то авторское", author: "авторское", lyrics: "" },
+
+            // Определённо может быть (бывш. ОМБ)
+            { artist: "Определённо может быть", title: "Авторская музыка с площадок", author: "авторская", lyrics: "" },
+
+            // Гельдыев Ахмет
+            { artist: "Гельдыев Ахмет", title: "Мама я люблю", author: "авторская", lyrics: "" },
+            { artist: "Гельдыев Ахмет", title: "Супермаркет", author: "авторская", lyrics: "" },
+            { artist: "Гельдыев Ахмет", title: "Курильщикам трудно без плана", author: "авторская", lyrics: "" },
+            { artist: "Гельдыев Ахмет", title: "Sign of the times", author: "кавер", lyrics: "" }
         ];
 
         // =============================================================
-        // КОД
+        // ЛОГИКА
         // =============================================================
 
         function renderSchedule(filter = '') {
             const container = document.getElementById('schedule');
-
             const filtered = SCHEDULE.filter(item =>
                 item.name.toLowerCase().includes(filter.toLowerCase())
             );
@@ -348,7 +385,7 @@
 
             let html = '';
             filtered.forEach(item => {
-                const isGroup = item.name.includes('группа') || item.name.includes('ОМБ');
+                const isGroup = item.name === "Каменный Лев" || item.name === "Определённо может быть";
                 html += `
                     <div class="row" onclick="openSongs('${item.name}')">
                         <div class="time">${item.time}</div>
@@ -357,13 +394,11 @@
                     </div>
                 `;
             });
-
             container.innerHTML = html;
         }
 
         function applyFilter() {
-            const val = document.getElementById('searchInput').value;
-            renderSchedule(val);
+            renderSchedule(document.getElementById('searchInput').value);
         }
 
         function goHome() {
@@ -383,8 +418,8 @@
             document.getElementById('artistTitle').textContent = artistName;
 
             const songs = SONGS.filter(s => s.artist === artistName);
-
             const list = document.getElementById('songsList');
+
             if (songs.length === 0) {
                 list.innerHTML =
                     `<div style="color:rgba(255,255,255,0.15);padding:20px;">У этого исполнителя пока нет песен</div>`;
@@ -394,14 +429,13 @@
             let html = '';
             songs.forEach((s, i) => {
                 html += `
-                    <div class="song" onclick="openLyrics('${s.title}', '${s.author}')">
+                    <div class="song" onclick="openLyrics('${s.title}', '${s.author}', '${s.lyrics}')">
                         <div class="title">${i + 1}. ${s.title}</div>
                         <div class="author">${s.author}</div>
                     </div>
                 `;
             });
             list.innerHTML = html;
-
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
@@ -411,18 +445,21 @@
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
-        function openLyrics(title, author) {
+        function openLyrics(title, author, lyrics) {
             document.getElementById('pageSongs').classList.add('hidden');
             document.getElementById('pageLyrics').classList.remove('hidden');
 
             document.getElementById('lyricTitle').textContent = title;
             document.getElementById('lyricAuthor').textContent = author;
-            document.getElementById('lyricText').textContent = '📝 Текст песни пока не добавлен.';
+
+            const text = lyrics && lyrics.trim() !== '' ? lyrics : '📝 Текст пока не добавлен.';
+            document.getElementById('lyricText').textContent = text;
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
         // =============================================================
         // ЗАПУСК
+        // =============================================================
 
         renderSchedule();
 
