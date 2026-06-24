@@ -10,7 +10,6 @@
             padding: 0;
             box-sizing: border-box;
         }
-
         body {
             font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
             background: #0b0e1a;
@@ -18,25 +17,21 @@
             padding: 40px 20px;
             color: #f0f0f5;
         }
-
         .container {
             max-width: 900px;
             margin: 0 auto;
         }
 
-        /* ШАПКА */
         .header {
             text-align: center;
             margin-bottom: 40px;
         }
-
         .header h1 {
             font-size: 38px;
             font-weight: 700;
             letter-spacing: 2px;
             color: #ffd866;
         }
-
         .header p {
             color: rgba(255, 255, 255, 0.3);
             font-size: 14px;
@@ -45,12 +40,10 @@
             margin-top: 6px;
         }
 
-        /* ПОИСК */
         .search-box {
             text-align: center;
             margin-bottom: 30px;
         }
-
         .search-box input {
             width: 100%;
             max-width: 480px;
@@ -63,57 +56,60 @@
             outline: none;
             transition: 0.3s;
         }
-
-        .search-box input::placeholder {
-            color: rgba(255, 255, 255, 0.25);
-        }
-
         .search-box input:focus {
             border-color: #ffd86666;
             background: rgba(255, 255, 255, 0.07);
         }
-
-        /* КАРТОЧКИ */
-        .grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
-            gap: 16px;
+        .search-box input::placeholder {
+            color: rgba(255, 255, 255, 0.25);
         }
 
-        .card {
-            background: rgba(255, 255, 255, 0.03);
-            border: 1px solid rgba(255, 255, 255, 0.06);
-            border-radius: 20px;
-            padding: 20px 24px;
+        /* ===== РАСПИСАНИЕ ===== */
+        .schedule {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .row {
+            display: flex;
+            align-items: center;
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 16px;
+            padding: 14px 24px;
             cursor: pointer;
             transition: 0.25s;
         }
-
-        .card:hover {
-            background: rgba(255, 215, 0, 0.05);
+        .row:hover {
+            background: rgba(255, 215, 0, 0.04);
             border-color: #ffd86644;
-            transform: translateY(-3px);
+            transform: translateX(4px);
         }
 
-        .card .name {
-            font-size: 18px;
-            font-weight: 600;
+        .time {
+            font-size: 20px;
+            font-weight: 700;
             color: #ffd866;
+            width: 80px;
+            flex-shrink: 0;
+            letter-spacing: 1px;
         }
 
-        .card .count {
+        .name {
+            font-size: 18px;
+            font-weight: 500;
+            color: #fff;
+            flex: 1;
+        }
+
+        .badge {
             font-size: 13px;
-            color: rgba(255, 255, 255, 0.25);
-            margin-top: 6px;
-        }
-
-        .card .badge {
-            font-size: 12px;
             color: #ffd86655;
-            margin-left: 8px;
+            margin-left: 10px;
         }
 
-        /* КНОПКА НАЗАД */
+        /* ===== СТРАНИЦА ПЕСЕН ===== */
         .back {
             display: inline-block;
             margin: 10px 0 20px;
@@ -126,12 +122,10 @@
             cursor: pointer;
             transition: 0.25s;
         }
-
         .back:hover {
             background: rgba(255, 215, 0, 0.14);
         }
 
-        /* ПЕСНИ */
         .song {
             background: rgba(255, 255, 255, 0.02);
             border-left: 3px solid #ffd86633;
@@ -141,25 +135,21 @@
             cursor: pointer;
             transition: 0.2s;
         }
-
         .song:hover {
             background: rgba(255, 255, 255, 0.04);
             border-left-color: #ffd866;
         }
-
         .song .title {
             font-size: 18px;
             font-weight: 500;
             color: #fff;
         }
-
         .song .author {
             font-size: 14px;
             color: rgba(255, 255, 255, 0.3);
             margin-top: 2px;
         }
 
-        /* ТЕКСТ ПЕСНИ */
         .lyrics-box {
             background: rgba(255, 255, 255, 0.02);
             border: 1px solid rgba(255, 255, 255, 0.05);
@@ -167,19 +157,16 @@
             padding: 30px 35px;
             margin-top: 10px;
         }
-
         .lyrics-box .big-title {
             font-size: 28px;
             color: #ffd866;
             font-weight: 600;
         }
-
         .lyrics-box .big-author {
             font-size: 16px;
             color: rgba(255, 255, 255, 0.3);
             margin: 4px 0 20px;
         }
-
         .lyrics-box .text {
             font-size: 17px;
             line-height: 1.9;
@@ -188,84 +175,16 @@
             font-family: Georgia, serif;
         }
 
-        /* СТРАНИЦЫ */
         .page {
             display: block;
         }
-
         .page.hidden {
             display: none;
-        }
-
-        /* СТАТИСТИКА */
-        .stats {
-            text-align: center;
-            color: rgba(255, 255, 255, 0.08);
-            font-size: 13px;
-            letter-spacing: 2px;
-            margin-top: 30px;
-        }
-
-        /* ЗАГРУЗКА */
-        .loader {
-            text-align: center;
-            padding: 60px 20px;
-            color: rgba(255, 255, 255, 0.15);
-        }
-
-        .loader .spinner {
-            width: 30px;
-            height: 30px;
-            border: 3px solid rgba(255, 215, 0, 0.08);
-            border-top-color: #ffd866;
-            border-radius: 50%;
-            animation: spin 0.9s linear infinite;
-            margin: 0 auto 16px;
-        }
-
-        @keyframes spin {
-            to {
-                transform: rotate(360deg);
-            }
-        }
-
-        /* ОШИБКА */
-        .error {
-            text-align: center;
-            padding: 40px 20px;
-            color: rgba(255, 120, 120, 0.6);
-            font-size: 15px;
-            line-height: 1.8;
-        }
-
-        .error code {
-            color: #ffd86688;
-            background: rgba(255, 255, 255, 0.04);
-            padding: 2px 10px;
-            border-radius: 6px;
-            font-size: 14px;
-        }
-
-        /* АДАПТИВ */
-        @media (max-width: 550px) {
-            .header h1 {
-                font-size: 26px;
-            }
-            .grid {
-                grid-template-columns: 1fr;
-            }
-            .lyrics-box {
-                padding: 20px;
-            }
-            .lyrics-box .big-title {
-                font-size: 22px;
-            }
         }
 
         .fade {
             animation: fade 0.3s ease;
         }
-
         @keyframes fade {
             from {
                 opacity: 0;
@@ -276,42 +195,53 @@
                 transform: translateY(0);
             }
         }
+
+        @media (max-width: 550px) {
+            .header h1 {
+                font-size: 26px;
+            }
+            .row {
+                flex-wrap: wrap;
+                gap: 6px 12px;
+            }
+            .time {
+                font-size: 18px;
+                width: auto;
+            }
+            .lyrics-box {
+                padding: 20px;
+            }
+            .lyrics-box .big-title {
+                font-size: 22px;
+            }
+        }
     </style>
 </head>
-
 <body>
     <div class="container">
 
-        <!-- ШАПКА -->
         <div class="header">
             <h1>✦ РАСПИСАНИЕ ГИТАРНИКА ✦</h1>
             <p>Вечер выступлений</p>
         </div>
 
-        <!-- ПОИСК -->
-        <div class="search-box" id="searchBox">
+        <div class="search-box">
             <input type="text" id="searchInput" placeholder="Найти исполнителя..." oninput="applyFilter()" />
         </div>
 
-        <!-- СТРАНИЦА: СПИСОК ИСПОЛНИТЕЛЕЙ -->
+        <!-- ===== ГЛАВНАЯ ===== -->
         <div id="pageMain" class="page">
-            <div id="loader" class="loader">
-                <div class="spinner"></div>
-                Загрузка данных...
-            </div>
-            <div id="grid" class="grid" style="display:none;"></div>
-            <div id="stats" class="stats"></div>
-            <div id="error" class="error" style="display:none;"></div>
+            <div id="schedule" class="schedule"></div>
         </div>
 
-        <!-- СТРАНИЦА: ПЕСНИ -->
+        <!-- ===== ПЕСНИ ===== -->
         <div id="pageSongs" class="page hidden">
-            <button class="back" onclick="goHome()">← Назад к списку</button>
+            <button class="back" onclick="goHome()">← Назад к расписанию</button>
             <div id="artistTitle" style="font-size:32px;color:#ffd866;font-weight:700;"></div>
             <div id="songsList"></div>
         </div>
 
-        <!-- СТРАНИЦА: ТЕКСТ ПЕСНИ -->
+        <!-- ===== ТЕКСТ ===== -->
         <div id="pageLyrics" class="page hidden">
             <button class="back" onclick="goToSongs()">← Назад к песням</button>
             <div class="lyrics-box fade">
@@ -325,143 +255,146 @@
 
     <script>
         // =============================================================
-        // 1. ЗАГРУЗКА ДАННЫХ
+        // ДАННЫЕ
         // =============================================================
 
-        let artists = [];
-        let songs = [];
-        let currentArtistId = null;
-
-        async function load() {
-            const loader = document.getElementById('loader');
-            const grid = document.getElementById('grid');
-            const error = document.getElementById('error');
-
-            try {
-                const res = await fetch('data.json');
-                if (!res.ok) throw new Error('Файл data.json не найден (HTTP ' + res.status + ')');
-
-                const data = await res.json();
-
-                // Проверяем структуру
-                if (!data.artists || !Array.isArray(data.artists)) {
-                    throw new Error('В data.json нет массива "artists"');
-                }
-                if (!data.songs || !Array.isArray(data.songs)) {
-                    throw new Error('В data.json нет массива "songs"');
-                }
-
-                artists = data.artists;
-                songs = data.songs;
-
-                // Привязываем песни к исполнителям
-                artists.forEach(artist => {
-                    artist.songList = songs.filter(s => s.artist_id === artist.id);
-                });
-
-                render();
-
-                loader.style.display = 'none';
-                grid.style.display = 'grid';
-
-            } catch (err) {
-                console.error(err);
-                loader.style.display = 'none';
-                error.style.display = 'block';
-                error.innerHTML = `
-                    ❌ Не удалось загрузить данные.<br><br>
-                    Проверьте:<br>
-                    1. Файл <code>data.json</code> лежит рядом с <code>index.html</code><br>
-                    2. В <code>data.json</code> нет синтаксических ошибок<br>
-                    3. Интернет-соединение<br><br>
-                    <span style="color:rgba(255,255,255,0.15);font-size:13px;">${err.message}</span>
-                `;
-            }
-        }
+        const SCHEDULE = [
+            { time: "20:00", name: "Саня Hellraiser Захарчук" },
+            { time: "20:15", name: "Рыжкова Екатерина Алексеевна" },
+            { time: "20:25", name: "Курносов Владимир Александрович" },
+            { time: "20:35", name: "Вера Благовещенская" },
+            { time: "20:45", name: "Савватеев Михаил Алексеевич" },
+            { time: "21:00", name: "Зильберштейн Арпине + Аракелян Екатерина" },
+            { time: "21:15", name: "Ананьев Владислав Антонович" },
+            { time: "21:25", name: "Куприянова Софья Андреевна" },
+            { time: "21:32", name: "Завадский Дмитрий" },
+            { time: "21:45", name: "Каменный Лев (группа)" },
+            { time: "22:00", name: "Алан Б" },
+            { time: "22:15", name: "Поминов Денис Игоревич" },
+            { time: "22:25", name: "ОМБ (Определённо Может Быть)" },
+            { time: "22:45", name: "Гельдыев Ахмет" }
+        ];
 
         // =============================================================
-        // 2. ОТРИСОВКА
+        // ПЕСНИ (привязаны по ИМЕНИ исполнителя)
         // =============================================================
 
-        function render(filter = '') {
-            const grid = document.getElementById('grid');
-            const stats = document.getElementById('stats');
+        const SONGS = [
+            { artist: "Саня Hellraiser Захарчук", title: "Dance Me to the End of Love", author: "Leonard Cohen" },
+            { artist: "Саня Hellraiser Захарчук", title: "Tears Don't Fall", author: "Bullet for My Valentine" },
+            { artist: "Саня Hellraiser Захарчук", title: "Из окна", author: "Noize MC" },
+            { artist: "Саня Hellraiser Захарчук", title: "Морок", author: "Я" },
+            { artist: "Гельдыев Ахмет", title: "Мама я люблю", author: "авторская" },
+            { artist: "Гельдыев Ахмет", title: "Супермаркет", author: "авторская" },
+            { artist: "Гельдыев Ахмет", title: "Курильщикам трудно без плана", author: "авторская" },
+            { artist: "Гельдыев Ахмет", title: "Sign of the times", author: "кавер" },
+            { artist: "Рыжкова Екатерина Алексеевна", title: "Потерянный рай", author: "Ария" },
+            { artist: "Рыжкова Екатерина Алексеевна", title: "Я свободен", author: "Ария" },
+            { artist: "Рыжкова Екатерина Алексеевна", title: "Нева", author: "5nizza" },
+            { artist: "Курносов Владимир Александрович", title: "Е=mc²", author: "Ундервуд" },
+            { artist: "Курносов Владимир Александрович", title: "Гагарин, я Вас любила", author: "Ундервуд" },
+            { artist: "Курносов Владимир Александрович", title: "Кукушка", author: "Кино" },
+            { artist: "Савватеев Михаил Алексеевич", title: "Марш Небесных Связистов", author: "Олег Медведев" },
+            { artist: "Савватеев Михаил Алексеевич", title: "Марафонец", author: "Смешарики" },
+            { artist: "Савватеев Михаил Алексеевич", title: "Белое Безмолвие", author: "Высоцкий" },
+            { artist: "Савватеев Михаил Алексеевич", title: "Стеклянный Господин", author: "Никитины" },
+            { artist: "Ананьев Владислав Антонович", title: "Девочка пай", author: "Михаил Круг" },
+            { artist: "Ананьев Владислав Антонович", title: "Мое сердце", author: "Сплин" },
+            { artist: "Ананьев Владислав Антонович", title: "Милые зеленые глаза", author: "Муцураев" },
+            { artist: "Каменный Лев (группа)", title: "Временно", author: "авторская" },
+            { artist: "Каменный Лев (группа)", title: "Теряюсь", author: "авторская" },
+            { artist: "Каменный Лев (группа)", title: "Поезда", author: "авторская" },
+            { artist: "Зильберштейн Арпине + Аракелян Екатерина", title: "Mer Siro Ashuny", author: "Ruben Hakhverdyan" },
+            { artist: "Зильберштейн Арпине + Аракелян Екатерина", title: "Aravind, Arevin", author: "Lava Eli" },
+            { artist: "Зильберштейн Арпине + Аракелян Екатерина", title: "Bari Aragil", author: "Serj Tankian" },
+            { artist: "Зильберштейн Арпине + Аракелян Екатерина", title: "Ari Erb Ush e", author: "Armine Hayrapetyan" },
+            { artist: "Куприянова Софья Андреевна", title: "Young And Beautiful", author: "Lana Del Rey" },
+            { artist: "Куприянова Софья Андреевна", title: "Riptide", author: "Vance Joy" },
+            { artist: "Алан Б", title: "Свои песни", author: "авторские" },
+            { artist: "Вера Благовещенская", title: "Я бью женщин и детей", author: "Валентин Стрыкало" },
+            { artist: "Вера Благовещенская", title: "Дешевые драмы", author: "Валентин Стрыкало" },
+            { artist: "Вера Благовещенская", title: "Рустэм", author: "Валентин Стрыкало" },
+            { artist: "Поминов Денис Игоревич", title: "92", author: "Стрыкало" },
+            { artist: "Поминов Денис Игоревич", title: "Улыбнись", author: "Cupsize" },
+            { artist: "Поминов Денис Игоревич", title: "Что-то авторское", author: "авторское" },
+            { artist: "Завадский Дмитрий", title: "Ля-ля тополя", author: "Би-2" },
+            { artist: "Завадский Дмитрий", title: "Чувства", author: "Animal ДжаZ" },
+            { artist: "Завадский Дмитрий", title: "Просвистела", author: "ДДТ" },
+            { artist: "Сергеев Владимир Алексеевич", title: "Романс-Диктофон", author: "—" },
+            { artist: "Сергеев Владимир Алексеевич", title: "Корсары-Йовин", author: "—" },
+            { artist: "Сергеев Владимир Алексеевич", title: "Я тебе не верю", author: "Григорий Лепс" },
+            { artist: "Капустин Егор Дмитриевич", title: "Весна", author: "4 Позиции Бруно" },
+            { artist: "Капустин Егор Дмитриевич", title: "Супермен", author: "КРУПНОГАБАРИТНЫЕ ОТХОДЫ" },
+            { artist: "Капустин Егор Дмитриевич", title: "Бетон с молоком", author: "КРУПНОГАБАРИТНЫЕ ОТХОДЫ" },
+            { artist: "ОМБ (Определённо Может Быть)", title: "Авторская музыка с площадок", author: "авторская" }
+        ];
 
-            const filtered = artists.filter(a =>
-                a.name.toLowerCase().includes(filter.toLowerCase())
+        // =============================================================
+        // КОД
+        // =============================================================
+
+        function renderSchedule(filter = '') {
+            const container = document.getElementById('schedule');
+
+            const filtered = SCHEDULE.filter(item =>
+                item.name.toLowerCase().includes(filter.toLowerCase())
             );
 
             if (filtered.length === 0) {
-                grid.innerHTML =
-                `<div style="text-align:center;color:rgba(255,255,255,0.15);padding:40px;">Ничего не найдено</div>`;
-                stats.textContent = '';
+                container.innerHTML =
+                    `<div style="text-align:center;color:rgba(255,255,255,0.15);padding:40px;">Ничего не найдено</div>`;
                 return;
             }
 
             let html = '';
-            filtered.forEach(a => {
-                const count = a.songList ? a.songList.length : 0;
-                const isGroup = a.name.includes('группа') || a.name.includes('ОМБ') ? '★' : '';
+            filtered.forEach(item => {
+                const isGroup = item.name.includes('группа') || item.name.includes('ОМБ');
                 html += `
-                    <div class="card" onclick="openSongs(${a.id})">
-                        <div class="name">${a.name} <span class="badge">${isGroup}</span></div>
-                        <div class="count">${count} ${declension(count)}</div>
+                    <div class="row" onclick="openSongs('${item.name}')">
+                        <div class="time">${item.time}</div>
+                        <div class="name">${item.name}</div>
+                        ${isGroup ? '<span class="badge">★ группа</span>' : ''}
                     </div>
                 `;
             });
 
-            grid.innerHTML = html;
-
-            const total = artists.reduce((sum, a) => sum + (a.songList ? a.songList.length : 0), 0);
-            stats.textContent = `Всего исполнителей: ${artists.length}  ·  Песен: ${total}`;
-        }
-
-        function declension(n) {
-            if (n === 1) return 'песня';
-            if (n >= 2 && n <= 4) return 'песни';
-            return 'песен';
+            container.innerHTML = html;
         }
 
         function applyFilter() {
             const val = document.getElementById('searchInput').value;
-            render(val);
+            renderSchedule(val);
         }
-
-        // =============================================================
-        // 3. НАВИГАЦИЯ
-        // =============================================================
 
         function goHome() {
             document.getElementById('pageMain').classList.remove('hidden');
-            document.getElementById('searchBox').style.display = 'block';
+            document.getElementById('searchInput').parentElement.style.display = 'block';
             document.getElementById('pageSongs').classList.add('hidden');
             document.getElementById('pageLyrics').classList.add('hidden');
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
-        function openSongs(artistId) {
-            const artist = artists.find(a => a.id === artistId);
-            if (!artist) return;
-
-            currentArtistId = artistId;
-
+        function openSongs(artistName) {
             document.getElementById('pageMain').classList.add('hidden');
-            document.getElementById('searchBox').style.display = 'none';
+            document.getElementById('searchInput').parentElement.style.display = 'none';
             document.getElementById('pageSongs').classList.remove('hidden');
             document.getElementById('pageLyrics').classList.add('hidden');
 
-            document.getElementById('artistTitle').textContent = artist.name;
+            document.getElementById('artistTitle').textContent = artistName;
+
+            const songs = SONGS.filter(s => s.artist === artistName);
 
             const list = document.getElementById('songsList');
-            if (!artist.songList || artist.songList.length === 0) {
-                list.innerHTML = `<div style="color:rgba(255,255,255,0.15);padding:20px;">У этого исполнителя пока нет песен</div>`;
+            if (songs.length === 0) {
+                list.innerHTML =
+                    `<div style="color:rgba(255,255,255,0.15);padding:20px;">У этого исполнителя пока нет песен</div>`;
                 return;
             }
 
             let html = '';
-            artist.songList.forEach((s, i) => {
+            songs.forEach((s, i) => {
                 html += `
-                    <div class="song" onclick="openLyrics(${s.id})">
+                    <div class="song" onclick="openLyrics('${s.title}', '${s.author}')">
                         <div class="title">${i + 1}. ${s.title}</div>
                         <div class="author">${s.author}</div>
                     </div>
@@ -478,27 +411,22 @@
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
-        function openLyrics(songId) {
-            const song = songs.find(s => s.id === songId);
-            if (!song) return;
-
+        function openLyrics(title, author) {
             document.getElementById('pageSongs').classList.add('hidden');
             document.getElementById('pageLyrics').classList.remove('hidden');
 
-            document.getElementById('lyricTitle').textContent = song.title;
-            document.getElementById('lyricAuthor').textContent = song.author;
+            document.getElementById('lyricTitle').textContent = title;
+            document.getElementById('lyricAuthor').textContent = author;
             document.getElementById('lyricText').textContent = '📝 Текст песни пока не добавлен.';
-
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
         // =============================================================
-        // 4. ЗАПУСК
+        // ЗАПУСК
         // =============================================================
 
-        load();
+        renderSchedule();
 
-        // Поиск по Enter
         document.getElementById('searchInput').addEventListener('keydown', e => {
             if (e.key === 'Enter') {
                 e.preventDefault();
@@ -506,6 +434,5 @@
             }
         });
     </script>
-
 </body>
 </html>
