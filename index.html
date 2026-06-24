@@ -174,15 +174,6 @@
             margin-bottom: 20px;
         }
 
-        .edit-hint {
-            font-size: 14px;
-            color: rgba(255, 255, 255, 0.15);
-            border-top: 1px solid rgba(255, 255, 255, 0.05);
-            padding-top: 16px;
-            margin-top: 10px;
-            font-style: italic;
-        }
-
         .page {
             display: block;
         }
@@ -283,88 +274,607 @@
         ];
 
         // =============================================================
-        // ПЕСНИ (с полем lyrics для текста)
+        // ПЕСНИ (с ID и текстами в обратных кавычках)
         // =============================================================
 
         const SONGS = [
-            // Саня Захрачук
-            { artist: "Саня Захрачук", title: "Dance Me to the End of Love", author: "Leonard Cohen", lyrics: "" },
-            { artist: "Саня Захрачук", title: "Tears Don't Fall", author: "Bullet for My Valentine", lyrics: "" },
-            { artist: "Саня Захрачук", title: "Из окна", author: "Noize MC", lyrics: "" },
-            { artist: "Саня Захрачук", title: "Морок", author: "Я", lyrics: "" },
+            // ===== САНЯ ЗАХРАЧУК =====
+            {
+                id: 1,
+                artist: "Саня Захрачук",
+                title: "Dance Me to the End of Love",
+                author: "Leonard Cohen",
+                lyrics: `Dance me to your beauty with a burning violin
+Dance me through the panic ’til I’m gathered safely in
+Lift me like an olive branch and be my homeward dove
+Dance me to the end of love
+Dance me to the end of love
+Oh let me see your beauty when the witnesses are gone
+Let me feel you moving like they do in Babylon
+Show me slowly what I only know the limits of
+Dance me to the end of love
+Dance me to the end of love
 
-            // Рыжкова Екатерина
-            { artist: "Рыжкова Екатерина", title: "Потерянный рай", author: "Ария", lyrics: "" },
-            { artist: "Рыжкова Екатерина", title: "Я свободен", author: "Ария", lyrics: "" },
-            { artist: "Рыжкова Екатерина", title: "Нева", author: "5nizza", lyrics: "" },
+Dance me to the wedding now, dance me on and on
+Dance me very tenderly and dance me very long
+We’re both of us beneath our love, we’re both of us above
+Dance me to the end of love
+Dance me to the end of love
 
-            // Курносов Владимир
-            { artist: "Курносов Владимир", title: "Е=mc²", author: "Ундервуд", lyrics: "" },
-            { artist: "Курносов Владимир", title: "Гагарин, я Вас любила", author: "Ундервуд", lyrics: "" },
-            { artist: "Курносов Владимир", title: "Кукушка", author: "Кино", lyrics: "" },
+Dance me to the children who are asking to be born
+Dance me through the curtains that our kisses have outworn
+Raise a tent of shelter now, though every thread is torn
+Dance me to the end of love
 
-            // Вера Благовещенская
-            { artist: "Вера Благовещенская", title: "Я бью женщин и детей", author: "Валентин Стрыкало", lyrics: "" },
-            { artist: "Вера Благовещенская", title: "Дешевые драмы", author: "Валентин Стрыкало", lyrics: "" },
-            { artist: "Вера Благовещенская", title: "Рустэм", author: "Валентин Стрыкало", lyrics: "" },
+Dance me to your beauty with a burning violin
+Dance me through the panic till I’m gathered safely in
+Touch me with your naked hand, touch me with your glove
+Dance me to the end of love
+Dance me to the end of love
+Dance me to the end of love`
+            },
+            {
+                id: 2,
+                artist: "Саня Захрачук",
+                title: "Tears Don't Fall",
+                author: "Bullet for My Valentine",
+                lyrics: `Let's go!
 
-            // Сергеев Владимир
-            { artist: "Сергеев Владимир", title: "Романс-Диктофон", author: "—", lyrics: "" },
-            { artist: "Сергеев Владимир", title: "Корсары-Йовин", author: "—", lyrics: "" },
-            { artist: "Сергеев Владимир", title: "Я тебе не верю", author: "Григорий Лепс", lyrics: "" },
+With blood shot eyes, I watch you sleeping
+The warmth I feel beside me is slowly fading
+Would she hear me, if I called her name?
+Would she hold me, if she knew my shame?
 
-            // Зильберштейн Арпине + Аракелян Екатерина
-            { artist: "Зильберштейн Арпине + Аракелян Екатерина", title: "Mer Siro Ashuny", author: "Ruben Hakhverdyan", lyrics: "" },
-            { artist: "Зильберштейн Арпине + Аракелян Екатерина", title: "Aravind, Arevin", author: "Lava Eli", lyrics: "" },
-            { artist: "Зильберштейн Арпине + Аракелян Екатерина", title: "Bari Aragil", author: "Serj Tankian", lyrics: "" },
-            { artist: "Зильберштейн Арпине + Аракелян Екатерина", title: "Ari Erb Ush e", author: "Armine Hayrapetyan", lyrics: "" },
+There's always something different going wrong
+The path I walk is in the wrong direction
+There's always someone fucking hanging on
+Can anybody help me makes things better?
 
-            // Ананьев Владислав
-            { artist: "Ананьев Владислав", title: "Девочка пай", author: "Михаил Круг", lyrics: "" },
-            { artist: "Ананьев Владислав", title: "Мое сердце", author: "Сплин", lyrics: "" },
-            { artist: "Ананьев Владислав", title: "Милые зеленые глаза", author: "Муцураев", lyrics: "" },
+Your tears don't fall, they crash around me
+Her conscious calls, the guilty to come home
+Your tears don't fall, they crash around me
+Her conscious calls, the guilty to come home
 
-            // Куприянова Софья
-            { artist: "Куприянова Софья", title: "Young And Beautiful", author: "Lana Del Rey", lyrics: "" },
-            { artist: "Куприянова Софья", title: "Riptide", author: "Vance Joy", lyrics: "" },
+The moments died, I hear no screaming
+The visions left inside me are slowly fading
+Would she hear me, if I called her name?
+Would she hold me, if she knew my shame?
 
-            // Капустин Егор
-            { artist: "Капустин Егор", title: "Весна", author: "4 Позиции Бруно", lyrics: "" },
-            { artist: "Капустин Егор", title: "Супермен", author: "КРУПНОГАБАРИТНЫЕ ОТХОДЫ", lyrics: "" },
-            { artist: "Капустин Егор", title: "Бетон с молоком", author: "КРУПНОГАБАРИТНЫЕ ОТХОДЫ", lyrics: "" },
+There's always something different going wrong
+The path I walk is in the wrong direction
+There's always someone fucking hanging on
+Can anybody help me makes things better?
 
-            // Завадский Дмитрий
-            { artist: "Завадский Дмитрий", title: "Ля-ля тополя", author: "Би-2", lyrics: "" },
-            { artist: "Завадский Дмитрий", title: "Чувства", author: "Animal ДжаZ", lyrics: "" },
-            { artist: "Завадский Дмитрий", title: "Просвистела", author: "ДДТ", lyrics: "" },
+Your tears don't fall, they crash around me
+Her conscious calls, the guilty to come home
+Your tears don't fall, they crash around me
+Her conscious calls, the guilty to come home
 
-            // Каменный Лев
-            { artist: "Каменный Лев", title: "Временно", author: "авторская", lyrics: "" },
-            { artist: "Каменный Лев", title: "Теряюсь", author: "авторская", lyrics: "" },
-            { artist: "Каменный Лев", title: "Поезда", author: "авторская", lyrics: "" },
+This battered room I've seen before
+The broken bones they heal no more, no more
+With my last breath I'm choking
+Will this ever end I'm hoping
+My world is over one more time
 
-            // Савватеев Михаил
-            { artist: "Савватеев Михаил", title: "Марш Небесных Связистов", author: "Олег Медведев", lyrics: "" },
-            { artist: "Савватеев Михаил", title: "Марафонец", author: "Смешарики", lyrics: "" },
-            { artist: "Савватеев Михаил", title: "Белое Безмолвие", author: "Высоцкий", lyrics: "" },
-            { artist: "Савватеев Михаил", title: "Стеклянный Господин", author: "Никитины", lyrics: "" },
+Let's go!
 
-            // Алан Б
-            { artist: "Алан Б", title: "Свои песни", author: "авторские", lyrics: "" },
+Would she hear me, if I called her name?
+Would she hold me, if she knew my shame?
 
-            // Поминов Денис
-            { artist: "Поминов Денис", title: "92", author: "Стрыкало", lyrics: "" },
-            { artist: "Поминов Денис", title: "Улыбнись", author: "Cupsize", lyrics: "" },
-            { artist: "Поминов Денис", title: "Что-то авторское", author: "авторское", lyrics: "" },
+There's always something different going wrong
+The path I walk is in the wrong direction
+There's always someone fucking hanging on
+Can anybody help me makes things better?
 
-            // Определённо может быть (бывш. ОМБ)
-            { artist: "Определённо может быть", title: "Авторская музыка с площадок", author: "авторская", lyrics: "" },
+Your tears don't fall, they crash around me
+Her conscious calls, the guilty to come home
+Your tears don't fall, they crash around me
+Her conscious calls, the guilty to come home
 
-            // Гельдыев Ахмет
-            { artist: "Гельдыев Ахмет", title: "Мама я люблю", author: "авторская", lyrics: "" },
-            { artist: "Гельдыев Ахмет", title: "Супермаркет", author: "авторская", lyrics: "" },
-            { artist: "Гельдыев Ахмет", title: "Курильщикам трудно без плана", author: "авторская", lyrics: "" },
-            { artist: "Гельдыев Ахмет", title: "Sign of the times", author: "кавер", lyrics: "" }
+Better!
+
+Your tears don't fall, they crash around me
+Her conscious calls, the guilty to come home`
+            },
+            {
+                id: 3,
+                artist: "Саня Захрачук",
+                title: "Из окна",
+                author: "Noize MC",
+                lyrics: `[Интро]
+В рот я ебал ваш первый канал
+И второй канал тоже в рот ебал
+Третий канал — тоже тот ещё кал
+Да и четвёртый, если честно, я смотреть бы не стал
+По мне так, что пятый канал, что шестой
+Такой же отстой, как седьмой и восьмой
+Девятый, десятый, бля, пятидесятый
+Куда ни включи, кругом одни дегенераты
+Сколько кнопками ни щёлкай на пульте
+Нормального ничего не показывают нигде
+Я так устал от всего этого говна
+И вот именно поэтому
+
+[Припев]
+Из окна гостиничного номера своего
+Я телевизор выкинул на авто
+Авторитета местного, ну и что?
+Я рок-звезда, идите на
+Из окна гостиничного номера своего
+Я телевизор выкинул на авто
+Авторитета местного, ну и что?
+Я рок-звезда, идите на
+You might also like
+Ice + Alabaster
+9mice & Kai Angel
+Вселенная бесконечна? (Is the Universe Infinite?)
+Noize MC
+Спящая красавица (Sleeping Beauty)
+Noize MC
+[Постприпев]
+Бум! Прогнулась крыша «гелендвагена»
+Ха-ха-ха! Смотрите все, какая вмятина
+Бум! Прогнулась крыша «гелендвагена»
+Ха-ха-ха! Смотрите все, какая вмятина
+
+[Куплет 1]
+Привет, Самара! Ой, то есть Саратов! То есть Волгоград!
+Я крайне рад сегодня в вашем классном городе играть
+Я где только ни был, но самые красивые девушки в мире
+Честное слово, зуб даю, у вас в Сибири
+У вас тут так красиво – море, мосты разводные
+В общем, Тверь теперь мой самый любимый город России
+То есть Казань. То есть, конечно, Пенза, я хотел сказать
+Калуга, где ваши руки? Не слышу ваши голоса
+Вы бы знали, что щас творится за кулисами –
+Там к нам приехали дяди какие-то лысые
+Говорят – не по понятиям вниз кидать телевизоры
+Если правильный пацан тачку припарковал поблизости
+Как широка и необъятна наша страна
+До чего плотно и густо населена она
+Занудами типа братвы этого быдлана
+Нет, ну, подумаешь
+Да, ну и что, что
+
+[Припев]
+Из окна гостиничного номера своего
+Я телевизор выкинул на авто
+Авторитета местного, ну и что?
+Я рок-звезда, идите на
+Из окна гостиничного номера своего
+Я телевизор выкинул на авто
+Авторитета местного, ну и что?
+Я рок-звезда, идите на
+[Постприпев]
+Бум! Прогнулась крыша «гелендвагена»
+Ха-ха-ха! Смотрите все, какая вмятина
+Бум! Прогнулась крыша «гелендвагена»
+Ха-ха-ха! Смотрите все, какая вмятина
+
+[Куплет 2]
+А завтра снова в новый город нас поезд утащит
+Продюсер нам сказал, что скоро отпуск, но он обманщик
+Так что DJ, басист, клавишник и барабанщик
+Ещё не раз посмотрят вниз на летящий ящик
+Опа! На асфальте мелкие осколки кинескопа
+Хозяин тачки смотрит наверх со злобой
+Смотрите, вот он — уже на ресепшен потопал
+Давайте выпьем за меткость, куда же делся штопор?
+Как широка и необъятна наша страна
+Каждый день — новые лица, новые имена
+Безумный гастрольный график сводит меня с ума
+И вот именно поэтому
+
+[Припев]
+Из окна гостиничного номера своего
+Я телевизор выкинул на авто
+Авторитета местного, ну и что?
+Я рок-звезда, идите на
+Из окна гостиничного номера своего
+Я телевизор выкинул на авто
+Авторитета местного, ну и что?
+Я рок-звезда, идите на
+[Постприпев]
+Бум! Прогнулась крыша «гелендвагена»
+Ха-ха-ха! Смотрите все, какая вмятина
+Бум! Прогнулась крыша «гелендвагена»
+Ха-ха-ха! Смотрите все, какая вмятина
+Бум! Прогнулась крыша «гелендвагена»
+Смотрите все, какая вмятина
+Смотрите все, какая вмятина`
+            },
+            {
+                id: 4,
+                artist: "Саня Захрачук",
+                title: "Морок",
+                author: "Shaize",
+                lyrics: `[Припев]
+
+Я трансформатор что приводит в состояние шока
+Внутривенно 220, осторожно много тока
+Скока морока повсюду будто схемы без контакта
+Мои провода под напряжением рвутся в такте
+
+Я трансформатор что приводит в состояние шока
+Внутривенно 220, осторожно много тока
+Скока морока повсюду будто схемы без контакта
+Мои провода под напряжением рвутся в такте
+
+[Куплет 1]
+
+Они читают все про ***, но цензура - для них буй
+Ты будешь ближе всего к рэпу тут, целуя меня в хуй
+Скажи мне - что ты решил сам
+Не под давлением большинства
+Пренебрежение движением из-за слабости ума
+Вы не видите возможностей скрываясь за комфортном зоны
+Рэп иконы, и картонные короны, ересь
+Я вернулся в Эфес, Shaize апостол
+За просмотры в шортсах глубоко се в жопу
+Раскалённый шомпол сунете, не суйтесь
+You might also like
+Система работает
+Shaize
+Janice STFU
+Drake
+Baby
+Justin Bieber
+[Куплет 2]
+
+Слышишь сука, за своё умру как чертов Кацумото
+Что мода, на отсутствие чего-то светлого
+Типо где романтика? Где что-то милое?
+Давайте лучше им побольше бабок
+(Больше, больше)
+Пацаны ебать у вас рога
+На патриках баба-яга просит квартиру в 18 у студента
+На свиданье первом просит плату за аренду
+Мне похуй я Оскар Уайльд пишу о том
+Как пачкаю портреты..
+
+[Припев]
+
+Я трансформатор что приводит в состояние шока
+Внутривенно 220, осторожно много тока
+Скока морока повсюду будто схемы без контакта
+Мои провода под напряжением рвутся в такте
+
+Я трансформатор что приводит в состояние шока
+Внутривенно 220, осторожно много тока
+Скока морока повсюду будто схемы без контакта
+Мои провода под напряжением рвутся в такте`
+            },
+
+            // ===== РЫЖКОВА ЕКАТЕРИНА =====
+            {
+                id: 5,
+                artist: "Рыжкова Екатерина",
+                title: "Потерянный рай",
+                author: "Ария",
+                lyrics: `Текст песни Потерянный рай`
+            },
+            {
+                id: 6,
+                artist: "Рыжкова Екатерина",
+                title: "Я свободен",
+                author: "Ария",
+                lyrics: `Текст песни Я свободен`
+            },
+            {
+                id: 7,
+                artist: "Рыжкова Екатерина",
+                title: "Нева",
+                author: "5nizza",
+                lyrics: `Текст песни Нева`
+            },
+
+            // ===== КУРНОСОВ ВЛАДИМИР =====
+            {
+                id: 8,
+                artist: "Курносов Владимир",
+                title: "Е=mc²",
+                author: "Ундервуд",
+                lyrics: `Текст песни Е=mc²`
+            },
+            {
+                id: 9,
+                artist: "Курносов Владимир",
+                title: "Гагарин, я Вас любила",
+                author: "Ундервуд",
+                lyrics: `Текст песни Гагарин, я Вас любила`
+            },
+            {
+                id: 10,
+                artist: "Курносов Владимир",
+                title: "Кукушка",
+                author: "Кино",
+                lyrics: `Текст песни Кукушка`
+            },
+
+            // ===== ВЕРА БЛАГОВЕЩЕНСКАЯ =====
+            {
+                id: 11,
+                artist: "Вера Благовещенская",
+                title: "Я бью женщин и детей",
+                author: "Валентин Стрыкало",
+                lyrics: `Текст песни Я бью женщин и детей`
+            },
+            {
+                id: 12,
+                artist: "Вера Благовещенская",
+                title: "Дешевые драмы",
+                author: "Валентин Стрыкало",
+                lyrics: `Текст песни Дешевые драмы`
+            },
+            {
+                id: 13,
+                artist: "Вера Благовещенская",
+                title: "Рустэм",
+                author: "Валентин Стрыкало",
+                lyrics: `Текст песни Рустэм`
+            },
+
+            // ===== СЕРГЕЕВ ВЛАДИМИР =====
+            {
+                id: 14,
+                artist: "Сергеев Владимир",
+                title: "Романс-Диктофон",
+                author: "—",
+                lyrics: `Текст песни Романс-Диктофон`
+            },
+            {
+                id: 15,
+                artist: "Сергеев Владимир",
+                title: "Корсары-Йовин",
+                author: "—",
+                lyrics: `Текст песни Корсары-Йовин`
+            },
+            {
+                id: 16,
+                artist: "Сергеев Владимир",
+                title: "Я тебе не верю",
+                author: "Григорий Лепс",
+                lyrics: `Текст песни Я тебе не верю`
+            },
+
+            // ===== ЗИЛЬБЕРШТЕЙН АРПИНЕ + АРАКЕЛЯН ЕКАТЕРИНА =====
+            {
+                id: 17,
+                artist: "Зильберштейн Арпине + Аракелян Екатерина",
+                title: "Mer Siro Ashuny",
+                author: "Ruben Hakhverdyan",
+                lyrics: `Текст песни Mer Siro Ashuny`
+            },
+            {
+                id: 18,
+                artist: "Зильберштейн Арпине + Аракелян Екатерина",
+                title: "Aravind, Arevin",
+                author: "Lava Eli",
+                lyrics: `Текст песни Aravind, Arevin`
+            },
+            {
+                id: 19,
+                artist: "Зильберштейн Арпине + Аракелян Екатерина",
+                title: "Bari Aragil",
+                author: "Serj Tankian",
+                lyrics: `Текст песни Bari Aragil`
+            },
+            {
+                id: 20,
+                artist: "Зильберштейн Арпине + Аракелян Екатерина",
+                title: "Ari Erb Ush e",
+                author: "Armine Hayrapetyan",
+                lyrics: `Текст песни Ari Erb Ush e`
+            },
+
+            // ===== АНАНЬЕВ ВЛАДИСЛАВ =====
+            {
+                id: 21,
+                artist: "Ананьев Владислав",
+                title: "Девочка пай",
+                author: "Михаил Круг",
+                lyrics: `Текст песни Девочка пай`
+            },
+            {
+                id: 22,
+                artist: "Ананьев Владислав",
+                title: "Мое сердце",
+                author: "Сплин",
+                lyrics: `Текст песни Мое сердце`
+            },
+            {
+                id: 23,
+                artist: "Ананьев Владислав",
+                title: "Милые зеленые глаза",
+                author: "Муцураев",
+                lyrics: `Текст песни Милые зеленые глаза`
+            },
+
+            // ===== КУПРИЯНОВА СОФЬЯ =====
+            {
+                id: 24,
+                artist: "Куприянова Софья",
+                title: "Young And Beautiful",
+                author: "Lana Del Rey",
+                lyrics: `Текст песни Young And Beautiful`
+            },
+            {
+                id: 25,
+                artist: "Куприянова Софья",
+                title: "Riptide",
+                author: "Vance Joy",
+                lyrics: `Текст песни Riptide`
+            },
+
+            // ===== КАПУСТИН ЕГОР =====
+            {
+                id: 26,
+                artist: "Капустин Егор",
+                title: "Весна",
+                author: "4 Позиции Бруно",
+                lyrics: `Текст песни Весна`
+            },
+            {
+                id: 27,
+                artist: "Капустин Егор",
+                title: "Супермен",
+                author: "КРУПНОГАБАРИТНЫЕ ОТХОДЫ",
+                lyrics: `Текст песни Супермен`
+            },
+            {
+                id: 28,
+                artist: "Капустин Егор",
+                title: "Бетон с молоком",
+                author: "КРУПНОГАБАРИТНЫЕ ОТХОДЫ",
+                lyrics: `Текст песни Бетон с молоком`
+            },
+
+            // ===== ЗАВАДСКИЙ ДМИТРИЙ =====
+            {
+                id: 29,
+                artist: "Завадский Дмитрий",
+                title: "Ля-ля тополя",
+                author: "Би-2",
+                lyrics: `Текст песни Ля-ля тополя`
+            },
+            {
+                id: 30,
+                artist: "Завадский Дмитрий",
+                title: "Чувства",
+                author: "Animal ДжаZ",
+                lyrics: `Текст песни Чувства`
+            },
+            {
+                id: 31,
+                artist: "Завадский Дмитрий",
+                title: "Просвистела",
+                author: "ДДТ",
+                lyrics: `Текст песни Просвистела`
+            },
+
+            // ===== КАМЕННЫЙ ЛЕВ =====
+            {
+                id: 32,
+                artist: "Каменный Лев",
+                title: "Временно",
+                author: "авторская",
+                lyrics: `Текст песни Временно`
+            },
+            {
+                id: 33,
+                artist: "Каменный Лев",
+                title: "Теряюсь",
+                author: "авторская",
+                lyrics: `Текст песни Теряюсь`
+            },
+            {
+                id: 34,
+                artist: "Каменный Лев",
+                title: "Поезда",
+                author: "авторская",
+                lyrics: `Текст песни Поезда`
+            },
+
+            // ===== САВВАТЕЕВ МИХАИЛ =====
+            {
+                id: 35,
+                artist: "Савватеев Михаил",
+                title: "Марш Небесных Связистов",
+                author: "Олег Медведев",
+                lyrics: `Текст песни Марш Небесных Связистов`
+            },
+            {
+                id: 36,
+                artist: "Савватеев Михаил",
+                title: "Марафонец",
+                author: "Смешарики",
+                lyrics: `Текст песни Марафонец`
+            },
+            {
+                id: 37,
+                artist: "Савватеев Михаил",
+                title: "Белое Безмолвие",
+                author: "Высоцкий",
+                lyrics: `Текст песни Белое Безмолвие`
+            },
+            {
+                id: 38,
+                artist: "Савватеев Михаил",
+                title: "Стеклянный Господин",
+                author: "Никитины",
+                lyrics: `Текст песни Стеклянный Господин`
+            },
+
+            // ===== АЛАН Б =====
+            {
+                id: 39,
+                artist: "Алан Б",
+                title: "Свои песни",
+                author: "авторские",
+                lyrics: `Текст песни Свои песни`
+            },
+
+            // ===== ПОМИНОВ ДЕНИС =====
+            {
+                id: 40,
+                artist: "Поминов Денис",
+                title: "92",
+                author: "Стрыкало",
+                lyrics: `Текст песни 92`
+            },
+            {
+                id: 41,
+                artist: "Поминов Денис",
+                title: "Улыбнись",
+                author: "Cupsize",
+                lyrics: `Текст песни Улыбнись`
+            },
+            {
+                id: 42,
+                artist: "Поминов Денис",
+                title: "Что-то авторское",
+                author: "авторское",
+                lyrics: `Текст песни Что-то авторское`
+            },
+
+            // ===== ОПРЕДЕЛЁННО МОЖЕТ БЫТЬ =====
+            {
+                id: 43,
+                artist: "Определённо может быть",
+                title: "Авторская музыка с площадок",
+                author: "авторская",
+                lyrics: `Текст песни Авторская музыка с площадок`
+            },
+
+            // ===== ГЕЛЬДЫЕВ АХМЕТ =====
+            {
+                id: 44,
+                artist: "Гельдыев Ахмет",
+                title: "Мама я люблю",
+                author: "авторская",
+                lyrics: `Текст песни Мама я люблю`
+            },
+            {
+                id: 45,
+                artist: "Гельдыев Ахмет",
+                title: "Супермаркет",
+                author: "авторская",
+                lyrics: `Текст песни Супермаркет`
+            },
+            {
+                id: 46,
+                artist: "Гельдыев Ахмет",
+                title: "Курильщикам трудно без плана",
+                author: "авторская",
+                lyrics: `Текст песни Курильщикам трудно без плана`
+            },
+            {
+                id: 47,
+                artist: "Гельдыев Ахмет",
+                title: "Sign of the times",
+                author: "кавер",
+                lyrics: `Текст песни Sign of the times`
+            }
         ];
 
         // =============================================================
@@ -429,7 +939,7 @@
             let html = '';
             songs.forEach((s, i) => {
                 html += `
-                    <div class="song" onclick="openLyrics('${s.title}', '${s.author}', '${s.lyrics}')">
+                    <div class="song" onclick="openLyrics(${s.id})">
                         <div class="title">${i + 1}. ${s.title}</div>
                         <div class="author">${s.author}</div>
                     </div>
@@ -445,14 +955,17 @@
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
-        function openLyrics(title, author, lyrics) {
+        function openLyrics(songId) {
+            const song = SONGS.find(s => s.id === songId);
+            if (!song) return;
+
             document.getElementById('pageSongs').classList.add('hidden');
             document.getElementById('pageLyrics').classList.remove('hidden');
 
-            document.getElementById('lyricTitle').textContent = title;
-            document.getElementById('lyricAuthor').textContent = author;
+            document.getElementById('lyricTitle').textContent = song.title;
+            document.getElementById('lyricAuthor').textContent = song.author;
 
-            const text = lyrics && lyrics.trim() !== '' ? lyrics : '📝 Текст пока не добавлен.';
+            const text = song.lyrics && song.lyrics.trim() !== '' ? song.lyrics : '📝 Текст пока не добавлен.';
             document.getElementById('lyricText').textContent = text;
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
