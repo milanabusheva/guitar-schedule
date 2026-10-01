@@ -4,227 +4,336 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Расписание Гитарника</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
+        :root {
+            --bg-1: #17110f;
+            --bg-2: #231915;
+            --amber: #f0b46c;
+            --amber-deep: #d98e4a;
+            --terracotta: #d9825b;
+            --cream: #f7ede0;
+            --cream-dim: rgba(247, 237, 224, 0.55);
+            --cream-faint: rgba(247, 237, 224, 0.32);
+            --glass: rgba(255, 238, 216, 0.05);
+            --glass-hover: rgba(255, 238, 216, 0.09);
+            --stroke: rgba(255, 238, 216, 0.09);
+            --stroke-hover: rgba(240, 180, 108, 0.5);
+            --serif: 'Cormorant Garamond', Georgia, 'Times New Roman', serif;
+            --sans: 'Manrope', 'Segoe UI', system-ui, -apple-system, sans-serif;
         }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
         body {
-            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
-            background: #0b0e1a;
+            font-family: var(--sans);
+            color: var(--cream);
             min-height: 100vh;
-            padding: 40px 20px;
-            color: #f0f0f5;
+            padding: 56px 20px 80px;
+            background:
+                radial-gradient(900px 500px at 12% -5%, rgba(217, 142, 74, 0.20), transparent 60%),
+                radial-gradient(800px 600px at 95% 15%, rgba(150, 70, 80, 0.16), transparent 60%),
+                radial-gradient(900px 700px at 50% 110%, rgba(217, 130, 91, 0.14), transparent 60%),
+                linear-gradient(180deg, var(--bg-2) 0%, var(--bg-1) 100%);
+            background-attachment: fixed;
+            position: relative;
+            overflow-x: hidden;
         }
-        .container {
-            max-width: 900px;
-            margin: 0 auto;
+        /* мягкое зерно */
+        body::after {
+            content: ''; position: fixed; inset: 0; z-index: 0; pointer-events: none;
+            opacity: 0.05; mix-blend-mode: overlay;
+            background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
         }
 
-        .header {
-            text-align: center;
-            margin-bottom: 40px;
+        /* ============ ОСЕННИЕ ЛИСТЬЯ ============ */
+        .leaves {
+            position: fixed; inset: 0;
+            pointer-events: none; overflow: hidden;
+            z-index: 1;
+        }
+        .leaf {
+            position: absolute; top: -140px;
+            animation: fall linear infinite;
+            will-change: transform;
+            filter: drop-shadow(0 6px 10px rgba(0,0,0,0.35));
+        }
+        .leaf.blur { filter: blur(2.5px) drop-shadow(0 6px 10px rgba(0,0,0,0.3)); }
+        @keyframes fall {
+            0%   { transform: translate3d(0, -140px, 0) rotate(0deg); opacity: 0; }
+            8%   { opacity: var(--op, 0.5); }
+            50%  { transform: translate3d(calc(var(--drift) * -0.6), 52vh, 0) rotate(calc(var(--rot) * 0.5)); }
+            92%  { opacity: calc(var(--op, 0.5) * 0.7); }
+            100% { transform: translate3d(var(--drift), 112vh, 0) rotate(var(--rot)); opacity: 0; }
+        }
+
+        .container {
+            max-width: 860px; margin: 0 auto;
+            position: relative; z-index: 2;
+        }
+
+        /* ============ ШАПКА ============ */
+        .header { text-align: center; margin-bottom: 44px; }
+        .header .ornament {
+            color: var(--amber); letter-spacing: 10px; font-size: 14px; opacity: 0.8;
+            margin-bottom: 10px;
         }
         .header h1 {
-            font-size: 38px;
-            font-weight: 700;
-            letter-spacing: 2px;
-            color: #ffd866;
+            font-family: var(--serif);
+            font-size: 64px; font-weight: 700; line-height: 1;
+            letter-spacing: 3px; text-transform: uppercase;
+            background: linear-gradient(180deg, #ffd9a0 0%, var(--amber) 45%, var(--terracotta) 100%);
+            -webkit-background-clip: text; background-clip: text;
+            -webkit-text-fill-color: transparent; color: transparent;
+            filter: drop-shadow(0 4px 22px rgba(240, 160, 80, 0.25));
         }
-        .header p {
-            color: rgba(255, 255, 255, 0.3);
-            font-size: 14px;
-            letter-spacing: 4px;
-            text-transform: uppercase;
-            margin-top: 6px;
+        .header .subtitle {
+            font-family: var(--serif); font-style: italic;
+            font-size: 22px; color: var(--cream-dim);
+            margin-top: 12px;
+        }
+        .header .divider {
+            width: 140px; height: 1px; margin: 22px auto 0;
+            background: linear-gradient(90deg, transparent, var(--amber), transparent);
         }
 
-        .search-box {
-            text-align: center;
-            margin-bottom: 30px;
-        }
+        /* ============ ПОИСК ============ */
+        .search-box { text-align: center; margin-bottom: 36px; }
         .search-box input {
-            width: 100%;
-            max-width: 480px;
-            padding: 14px 24px;
-            border-radius: 40px;
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            background: rgba(255, 255, 255, 0.04);
-            color: #f0f0f5;
-            font-size: 16px;
-            outline: none;
-            transition: 0.3s;
+            width: 100%; max-width: 460px;
+            padding: 14px 26px; border-radius: 50px;
+            border: 1px solid var(--stroke);
+            background: var(--glass);
+            color: var(--cream); font-family: var(--sans); font-size: 15px;
+            outline: none; transition: 0.3s;
+            backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
         }
         .search-box input:focus {
-            border-color: #ffd86666;
-            background: rgba(255, 255, 255, 0.07);
+            border-color: var(--stroke-hover);
+            background: var(--glass-hover);
+            box-shadow: 0 0 0 4px rgba(240, 180, 108, 0.08), 0 10px 40px rgba(0,0,0,0.25);
         }
-        .search-box input::placeholder {
-            color: rgba(255, 255, 255, 0.25);
-        }
+        .search-box input::placeholder { color: var(--cream-faint); }
 
+        /* ============ РАСПИСАНИЕ (таймлайн) ============ */
         .schedule {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
+            display: flex; flex-direction: column; gap: 12px;
+            position: relative; padding-left: 34px;
+        }
+        .schedule::before {
+            content: ''; position: absolute; left: 9px; top: 18px; bottom: 18px; width: 1px;
+            background: linear-gradient(180deg, transparent, rgba(240,180,108,0.45) 8%, rgba(240,180,108,0.45) 92%, transparent);
         }
 
         .row {
-            display: flex;
-            align-items: center;
-            background: rgba(255, 255, 255, 0.02);
-            border: 1px solid rgba(255, 255, 255, 0.05);
-            border-radius: 16px;
-            padding: 14px 24px;
-            cursor: pointer;
-            transition: 0.25s;
+            position: relative;
+            display: flex; align-items: center;
+            background: var(--glass);
+            border: 1px solid var(--stroke);
+            border-radius: 18px;
+            padding: 16px 24px;
+            cursor: pointer; transition: 0.28s;
+            backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+        }
+        .row::before { /* точка таймлайна */
+            content: ''; position: absolute; left: -30px; top: 50%;
+            width: 11px; height: 11px; margin-top: -5.5px; border-radius: 50%;
+            background: var(--bg-1);
+            border: 2px solid var(--amber-deep);
+            box-shadow: 0 0 0 4px rgba(217, 142, 74, 0.12);
+            transition: 0.28s;
         }
         .row:hover {
-            background: rgba(255, 215, 0, 0.04);
-            border-color: #ffd86644;
-            transform: translateX(4px);
+            background: var(--glass-hover);
+            border-color: var(--stroke-hover);
+            transform: translateX(5px);
+            box-shadow: 0 14px 40px rgba(0,0,0,0.3), 0 0 30px rgba(240,160,80,0.06);
+        }
+        .row:hover::before {
+            background: var(--amber);
+            box-shadow: 0 0 0 5px rgba(240, 180, 108, 0.2), 0 0 14px rgba(240,180,108,0.6);
         }
 
-        .time {
-            font-size: 20px;
-            font-weight: 700;
-            color: #ffd866;
-            width: 80px;
-            flex-shrink: 0;
-            letter-spacing: 1px;
+        .time-block {
+            display: flex; flex-direction: column; align-items: flex-start;
+            width: 96px; flex-shrink: 0;
+        }
+        .time-main {
+            font-family: var(--serif);
+            font-size: 28px; font-weight: 700; line-height: 1;
+            color: var(--amber);
+            letter-spacing: 0.5px;
+            font-variant-numeric: lining-nums;
+        }
+        .time-old {
+            font-family: var(--sans);
+            font-size: 17px; font-weight: 700;
+            color: rgba(247, 237, 224, 0.8);
+            text-decoration: line-through;
+            text-decoration-color: rgba(255, 90, 60, 1);
+            text-decoration-thickness: 2px;
+            line-height: 1; margin-bottom: 5px;
         }
 
         .name {
-            font-size: 18px;
-            font-weight: 500;
-            color: #fff;
-            flex: 1;
+            font-size: 16.5px; font-weight: 600;
+            color: var(--cream); flex: 1; line-height: 1.35;
         }
-
         .badge {
-            font-size: 13px;
-            color: #ffd86655;
-            margin-left: 10px;
+            font-size: 11.5px; font-weight: 600; letter-spacing: 1px; text-transform: uppercase;
+            color: var(--amber);
+            border: 1px solid rgba(240,180,108,0.35);
+            background: rgba(240,180,108,0.08);
+            padding: 4px 11px; border-radius: 20px;
+            margin-left: 12px; white-space: nowrap;
         }
 
+        /* ============ КНОПКА НАЗАД ============ */
         .back {
-            display: inline-block;
-            margin: 10px 0 20px;
-            padding: 8px 24px;
-            border-radius: 40px;
-            border: 1px solid rgba(255, 215, 0, 0.15);
-            background: rgba(255, 215, 0, 0.06);
-            color: #ffd866;
-            font-size: 14px;
-            cursor: pointer;
-            transition: 0.25s;
+            display: inline-block; margin: 6px 0 26px;
+            padding: 9px 24px; border-radius: 50px;
+            border: 1px solid var(--stroke);
+            background: var(--glass);
+            color: var(--amber); font-family: var(--sans); font-size: 14px; font-weight: 600;
+            cursor: pointer; transition: 0.25s;
+            backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
         }
         .back:hover {
-            background: rgba(255, 215, 0, 0.14);
+            background: rgba(240, 180, 108, 0.14);
+            border-color: var(--stroke-hover);
+            transform: translateX(-3px);
         }
 
+        .artist-title {
+            font-family: var(--serif);
+            font-size: 44px; font-weight: 700; line-height: 1.1;
+            color: var(--amber);
+            margin-bottom: 26px;
+            text-shadow: 0 4px 24px rgba(240,160,80,0.2);
+        }
+
+        /* ============ ПЕСНИ ============ */
         .song {
-            background: rgba(255, 255, 255, 0.02);
-            border-left: 3px solid #ffd86633;
-            padding: 14px 20px;
-            margin-bottom: 10px;
-            border-radius: 0 14px 14px 0;
-            cursor: pointer;
-            transition: 0.2s;
+            display: flex; align-items: center; gap: 18px;
+            background: var(--glass);
+            border: 1px solid var(--stroke);
+            padding: 16px 22px; margin-bottom: 11px;
+            border-radius: 16px;
+            cursor: pointer; transition: 0.25s;
+            backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
         }
         .song:hover {
-            background: rgba(255, 255, 255, 0.04);
-            border-left-color: #ffd866;
+            background: var(--glass-hover);
+            border-color: var(--stroke-hover);
+            transform: translateX(4px);
         }
-        .song .title {
-            font-size: 18px;
-            font-weight: 500;
-            color: #fff;
+        .song .num {
+            font-family: var(--serif); font-size: 30px; font-weight: 600;
+            color: var(--amber-deep); opacity: 0.8;
+            width: 34px; text-align: center; flex-shrink: 0; line-height: 1;
         }
-        .song .author {
-            font-size: 14px;
-            color: rgba(255, 255, 255, 0.3);
-            margin-top: 2px;
+        .song .title { font-size: 17px; font-weight: 600; color: var(--cream); }
+        .song .author { font-size: 13.5px; color: var(--cream-dim); margin-top: 3px; }
+
+        /* ============ ССЫЛКИ ============ */
+        .links-box {
+            margin-top: 30px; padding: 22px 26px;
+            background: var(--glass);
+            border: 1px solid var(--stroke);
+            border-radius: 18px;
+            backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
+        }
+        .links-box .links-title {
+            font-size: 12px; font-weight: 700; letter-spacing: 3px;
+            text-transform: uppercase; color: var(--amber);
+            opacity: 0.8; margin-bottom: 14px;
+        }
+        .links-box a {
+            display: inline-block; margin: 4px 8px 4px 0;
+            padding: 9px 20px; border-radius: 30px;
+            background: rgba(240, 180, 108, 0.1);
+            border: 1px solid rgba(240, 180, 108, 0.28);
+            color: #ffd9a0; text-decoration: none;
+            font-size: 14px; font-weight: 600; transition: 0.2s;
+            word-break: break-all;
+        }
+        .links-box a:hover {
+            background: rgba(240, 180, 108, 0.22);
+            border-color: rgba(240, 180, 108, 0.65);
+            transform: translateY(-2px);
         }
 
+        /* ============ ТЕКСТ ПЕСНИ ============ */
         .lyrics-box {
-            background: rgba(255, 255, 255, 0.02);
-            border: 1px solid rgba(255, 255, 255, 0.05);
-            border-radius: 20px;
-            padding: 30px 35px;
-            margin-top: 10px;
+            background: var(--glass);
+            border: 1px solid var(--stroke);
+            border-radius: 24px;
+            padding: 44px 40px; margin-top: 6px;
+            backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+            box-shadow: 0 24px 60px rgba(0,0,0,0.3);
+            text-align: center;
         }
         .lyrics-box .big-title {
-            font-size: 28px;
-            color: #ffd866;
-            font-weight: 600;
+            font-family: var(--serif);
+            font-size: 42px; font-weight: 700; line-height: 1.1; color: var(--amber);
         }
         .lyrics-box .big-author {
-            font-size: 16px;
-            color: rgba(255, 255, 255, 0.3);
-            margin: 4px 0 20px;
+            font-family: var(--serif); font-style: italic;
+            font-size: 20px; color: var(--cream-dim);
+            margin: 8px 0 0;
+        }
+        .lyrics-box .divider {
+            width: 90px; height: 1px; margin: 24px auto 28px;
+            background: linear-gradient(90deg, transparent, var(--amber), transparent);
         }
         .lyrics-box .text {
-            font-size: 17px;
-            line-height: 1.9;
-            color: rgba(255, 255, 255, 0.8);
+            font-family: var(--serif);
+            font-size: 21px; line-height: 1.85; font-weight: 500;
+            color: rgba(250, 240, 226, 0.92);
             white-space: pre-wrap;
-            font-family: Georgia, serif;
-            margin-bottom: 20px;
         }
 
-        .page {
-            display: block;
-        }
-        .page.hidden {
-            display: none;
-        }
+        .page { display: block; }
+        .page.hidden { display: none; }
 
-        .fade {
-            animation: fade 0.3s ease;
-        }
+        .fade { animation: fade 0.45s ease; }
         @keyframes fade {
-            from {
-                opacity: 0;
-                transform: translateY(8px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+            from { opacity: 0; transform: translateY(12px); }
+            to   { opacity: 1; transform: translateY(0); }
         }
 
-        @media (max-width: 550px) {
-            .header h1 {
-                font-size: 26px;
-            }
-            .row {
-                flex-wrap: wrap;
-                gap: 6px 12px;
-            }
-            .time {
-                font-size: 18px;
-                width: auto;
-            }
-            .lyrics-box {
-                padding: 20px;
-            }
-            .lyrics-box .big-title {
-                font-size: 22px;
-            }
+        @media (max-width: 600px) {
+            body { padding: 36px 14px 60px; }
+            .header h1 { font-size: 38px; letter-spacing: 1.5px; }
+            .header .subtitle { font-size: 18px; }
+            .schedule { padding-left: 26px; }
+            .schedule::before { left: 6px; }
+            .row { padding: 13px 16px; flex-wrap: wrap; gap: 4px 12px; }
+            .row::before { left: -24px; width: 9px; height: 9px; margin-top: -4.5px; }
+            .time-block { width: auto; }
+            .time-main { font-size: 24px; }
+            .name { font-size: 15px; }
+            .artist-title { font-size: 32px; }
+            .lyrics-box { padding: 28px 20px; }
+            .lyrics-box .big-title { font-size: 30px; }
+            .lyrics-box .text { font-size: 19px; }
         }
     </style>
 </head>
 <body>
+    <div class="leaves" id="leaves"></div>
+
     <div class="container">
 
         <div class="header">
-            <h1>✦ РАСПИСАНИЕ ГИТАРНИКА ✦</h1>
-            <p>Вечер выступлений</p>
+            <div class="ornament">✦ ✦ ✦</div>
+            <h1>Гитарник</h1>
+            <div class="subtitle">Осенний вечер выступлений</div>
+            <div class="divider"></div>
         </div>
 
-        <div class="search-box">
+        <div class="search-box" id="searchBox">
             <input type="text" id="searchInput" placeholder="Найти исполнителя..." oninput="applyFilter()" />
         </div>
 
@@ -234,8 +343,9 @@
 
         <div id="pageSongs" class="page hidden">
             <button class="back" onclick="goHome()">← Назад к расписанию</button>
-            <div id="artistTitle" style="font-size:32px;color:#ffd866;font-weight:700;"></div>
+            <div id="artistTitle" class="artist-title"></div>
             <div id="songsList"></div>
+            <div id="linksBox"></div>
         </div>
 
         <div id="pageLyrics" class="page hidden">
@@ -243,6 +353,7 @@
             <div class="lyrics-box fade">
                 <div class="big-title" id="lyricTitle"></div>
                 <div class="big-author" id="lyricAuthor"></div>
+                <div class="divider"></div>
                 <div class="text" id="lyricText"></div>
             </div>
         </div>
@@ -251,2305 +362,2434 @@
 
     <script>
         // =============================================================
-        // РАСПИСАНИЕ
+        // 🔧 БЫСТРАЯ ПРАВКА ВРЕМЕНИ
+        // -------------------------------------------------------------
+        // Когда кто-то опаздывает — впиши сюда строчку:
+        //
+        //   id: { newTime: "20:15", strike: true }
+        //
+        // id      — из ARTISTS ниже (не трогай)
+        // newTime — новое время
+        // strike  — true  = зачеркнуть старое и показать новое рядом
+        //           false = просто заменить время
+        //
+        // Пусто = всё по базовому расписанию.
         // =============================================================
 
-        const SCHEDULE = [
-            { time: "20:00", name: "Саня Захрачук" },
-            { time: "20:23", name: "Рыжкова Екатерина" },
-            { time: "20:33", name: "Курносов Владимир" },
-            { time: "20:43", name: "Вера Благовещенская" },
-            { time: "20:51", name: "Сергеев Владимир" },
-            { time: "21:01", name: "Зильберштейн Арпине + Аракелян Екатерина" },
-            { time: "21:14", name: "Куприянова Софья" },
-            { time: "21:21", name: "Капустин Егор" },
-            { time: "21:33", name: "Завадский Дмитрий" },
-            { time: "21:43", name: "Каменный Лев" },
-            { time: "22:00", name: "Савватеев Михаил" },
-            { time: "22:15", name: "Алан Б" },
-            { time: "22:30", name: "Поминов Денис" },
-            { time: "22:40", name: "Определённо может быть" },
-            { time: "23:00", name: "Открытый микрофон!" }
+        const TIME_OVERRIDES = {
+    18: { newTime: "20:00", strike: false },
+    10: { newTime: "20:10", strike: false },
+    11: { newTime: "20:20", strike: false },
+    16: { newTime: "20:33", strike: false },
+    1:  { newTime: "20:40", strike: false },
+    13: { newTime: "20:50", strike: false },
+    14: { newTime: "21:02", strike: false },
+    3:  { newTime: "21:12", strike: false },
+    4:  { newTime: "21:24", strike: false },
+    5:  { newTime: "21:36", strike: false },
+    8:  { newTime: "21:48", strike: false },
+    19: { newTime: "22:00", strike: false },
+    2:  { newTime: "22:12", strike: false },
+    7:  { newTime: "22:22", strike: false },
+    6:  { newTime: "22:34", strike: false },
+    15: { newTime: "22:44", strike: false },
+    12: { newTime: "22:54", strike: false },
+    9:  { newTime: "22:58", strike: false },
+    17: { newTime: "23:04", strike: false },
+    30: { newTime: "23:30", strike: true}
+};
+
+        // =============================================================
+        // ОСЕННИЕ ЛИСТЬЯ
+        // =============================================================
+
+        const LEAF_EMOJIS = ["🍁", "🍂", "🍃"];
+        const LEAF_COUNT = 14;
+
+        function createLeaves() {
+            const container = document.getElementById('leaves');
+            const small = window.innerWidth <= 600;
+            for (let i = 0; i < LEAF_COUNT; i++) {
+                const leaf = document.createElement('div');
+                leaf.className = 'leaf' + (Math.random() < 0.3 ? ' blur' : '');
+                leaf.textContent = LEAF_EMOJIS[Math.floor(Math.random() * LEAF_EMOJIS.length)];
+
+                const size = small ? 38 + Math.random() * 40 : 56 + Math.random() * 64;
+                leaf.style.left = (Math.random() * 100) + '%';
+                leaf.style.fontSize = size + 'px';
+                leaf.style.animationDuration = (16 + Math.random() * 16) + 's';
+                leaf.style.animationDelay = (-Math.random() * 30) + 's';
+                leaf.style.setProperty('--op', (0.3 + Math.random() * 0.3).toFixed(2));
+                leaf.style.setProperty('--drift', (Math.random() * 160 - 80).toFixed(0) + 'px');
+                leaf.style.setProperty('--rot', (Math.random() > 0.5 ? 1 : -1) * (200 + Math.random() * 360) + 'deg');
+
+                container.appendChild(leaf);
+            }
+        }
+
+        // =============================================================
+        // ИСПОЛНИТЕЛИ
+        // time — базовое время из расписания (до опозданий)
+        // links — массив { label, url } (опционально)
+        // isGroup — показывать бейдж "группа"
+        // =============================================================
+
+        const ARTISTS = [
+            { id: 18, name: "Рыжкова Екатерина Алексеевна",                                time: "20:00" },
+            { id: 10, name: "Курносов Владимир Александрович",                             time: "20:10" },
+            { id: 11, name: "Определённо может быть",  isGroup: true,                      time: "20:20", links: [
+                { label: "Telegram", url: "https://t.me/omb_band" },
+                { label: "Альбом", url: "https://band.link/omb_album" }
+            ]},
+            { id: 16, name: "Первакова Тамара Михайловна",                                 time: "20:33", links: [
+                { label: "Яндекс.Музыка", url: "https://music.yandex.by/album/38277557" }
+            ]},
+            { id: 1,  name: "Ася Горковенко",                                              time: "20:40" },
+            { id: 13, name: "Мордвинова Алина Борисовна, Лабутина Людмила Валерьевна",     time: "20:50" },
+            { id: 14, name: "Норец Илья Игоревич",                                         time: "21:02" },
+            { id: 3,  name: "Бурнашев Карим Фаридович, Сысоев Всеволод, Пилипенко Леонид", time: "21:12" },
+            { id: 4,  name: "Ганицев Тимофей Алексеевич",                                  time: "21:24", links: [
+                { label: "Telegram", url: "https://t.me/nuokey_music" }
+            ]},
+            { id: 5,  name: "Гимранов Равиль Римович, Горохов Артем Дмитриевич",           time: "21:36" },
+            { id: 8,  name: "Калюжный Александр",                                          time: "21:48" },
+            { id: 19, name: "Федоров Иван",                                                time: "22:00", links: [
+                { label: "Яндекс.Музыка", url: "https://music.yandex.ru/album/43500939" }
+            ]},
+            { id: 2,  name: "Болгарев Михаил Андреевич",                                   time: "22:12" },
+            { id: 7,  name: "Завадский Дмитрий Алексеевич",                                time: "22:22", links: [
+                { label: "Telegram", url: "https://t.me/zavadmit" }
+            ]},
+            { id: 6,  name: "Еникеев Арнольд",                                             time: "22:34", links: [
+                { label: "Telegram", url: "https://t.me/chmo_x" }
+            ]},
+            { id: 15, name: "Парфенова Аня, Чирков Гоша",                                  time: "22:44" },
+            { id: 12, name: "Матвеев Николай Владимирович",                                time: "22:54" },
+            { id: 9,  name: "Куприянова Софья Андреевна",                                  time: "22:58" },
+            { id: 17, name: "Полозов Дмитрий Сергеевич",                                   time: "23:04" },
+            { id: 30, name: "ОТКРЫТЫЙ МИКРОФОН!",                                          time: "23:16" }
+
         ];
 
         // =============================================================
-        // ПЕСНИ (с ID и текстами в обратных кавычках)
+        // ПЕСНИ
         // =============================================================
 
         const SONGS = [
-            // ===== САНЯ ЗАХРАЧУК =====
-            {
-                id: 1,
-                artist: "Саня Захрачук",
-                title: "Dance Me to the End of Love",
-                author: "Leonard Cohen",
-                lyrics: `Dance me to your beauty with a burning violin
-Dance me through the panic ’til I’m gathered safely in
-Lift me like an olive branch and be my homeward dove
-Dance me to the end of love
-Dance me to the end of love
-Oh let me see your beauty when the witnesses are gone
-Let me feel you moving like they do in Babylon
-Show me slowly what I only know the limits of
-Dance me to the end of love
-Dance me to the end of love
-
-Dance me to the wedding now, dance me on and on
-Dance me very tenderly and dance me very long
-We’re both of us beneath our love, we’re both of us above
-Dance me to the end of love
-Dance me to the end of love
-
-Dance me to the children who are asking to be born
-Dance me through the curtains that our kisses have outworn
-Raise a tent of shelter now, though every thread is torn
-Dance me to the end of love
-
-Dance me to your beauty with a burning violin
-Dance me through the panic till I’m gathered safely in
-Touch me with your naked hand, touch me with your glove
-Dance me to the end of love
-Dance me to the end of love
-Dance me to the end of love`
-            },
-            {
-                id: 2,
-                artist: "Саня Захрачук",
-                title: "Tears Don't Fall",
-                author: "Bullet for My Valentine",
-                lyrics: `Let's go!
-
-With blood shot eyes, I watch you sleeping
-The warmth I feel beside me is slowly fading
-Would she hear me, if I called her name?
-Would she hold me, if she knew my shame?
-
-There's always something different going wrong
-The path I walk is in the wrong direction
-There's always someone fucking hanging on
-Can anybody help me makes things better?
-
-Your tears don't fall, they crash around me
-Her conscious calls, the guilty to come home
-Your tears don't fall, they crash around me
-Her conscious calls, the guilty to come home
-
-The moments died, I hear no screaming
-The visions left inside me are slowly fading
-Would she hear me, if I called her name?
-Would she hold me, if she knew my shame?
-
-There's always something different going wrong
-The path I walk is in the wrong direction
-There's always someone fucking hanging on
-Can anybody help me makes things better?
-
-Your tears don't fall, they crash around me
-Her conscious calls, the guilty to come home
-Your tears don't fall, they crash around me
-Her conscious calls, the guilty to come home
-
-This battered room I've seen before
-The broken bones they heal no more, no more
-With my last breath I'm choking
-Will this ever end I'm hoping
-My world is over one more time
-
-Let's go!
-
-Would she hear me, if I called her name?
-Would she hold me, if she knew my shame?
-
-There's always something different going wrong
-The path I walk is in the wrong direction
-There's always someone fucking hanging on
-Can anybody help me makes things better?
-
-Your tears don't fall, they crash around me
-Her conscious calls, the guilty to come home
-Your tears don't fall, they crash around me
-Her conscious calls, the guilty to come home
-
-Better!
-
-Your tears don't fall, they crash around me
-Her conscious calls, the guilty to come home`
-            },
-            {
-                id: 3,
-                artist: "Саня Захрачук",
-                title: "Из окна",
-                author: "Noize MC",
-                lyrics: `[Интро]
-В рот я ебал ваш первый канал
-И второй канал тоже в рот ебал
-Третий канал — тоже тот ещё кал
-Да и четвёртый, если честно, я смотреть бы не стал
-По мне так, что пятый канал, что шестой
-Такой же отстой, как седьмой и восьмой
-Девятый, десятый, бля, пятидесятый
-Куда ни включи, кругом одни дегенераты
-Сколько кнопками ни щёлкай на пульте
-Нормального ничего не показывают нигде
-Я так устал от всего этого говна
-И вот именно поэтому
-
-[Припев]
-Из окна гостиничного номера своего
-Я телевизор выкинул на авто
-Авторитета местного, ну и что?
-Я рок-звезда, идите на
-Из окна гостиничного номера своего
-Я телевизор выкинул на авто
-Авторитета местного, ну и что?
-Я рок-звезда, идите на
-You might also like
-Ice + Alabaster
-9mice & Kai Angel
-Вселенная бесконечна? (Is the Universe Infinite?)
-Noize MC
-Спящая красавица (Sleeping Beauty)
-Noize MC
-[Постприпев]
-Бум! Прогнулась крыша «гелендвагена»
-Ха-ха-ха! Смотрите все, какая вмятина
-Бум! Прогнулась крыша «гелендвагена»
-Ха-ха-ха! Смотрите все, какая вмятина
-
-[Куплет 1]
-Привет, Самара! Ой, то есть Саратов! То есть Волгоград!
-Я крайне рад сегодня в вашем классном городе играть
-Я где только ни был, но самые красивые девушки в мире
-Честное слово, зуб даю, у вас в Сибири
-У вас тут так красиво – море, мосты разводные
-В общем, Тверь теперь мой самый любимый город России
-То есть Казань. То есть, конечно, Пенза, я хотел сказать
-Калуга, где ваши руки? Не слышу ваши голоса
-Вы бы знали, что щас творится за кулисами –
-Там к нам приехали дяди какие-то лысые
-Говорят – не по понятиям вниз кидать телевизоры
-Если правильный пацан тачку припарковал поблизости
-Как широка и необъятна наша страна
-До чего плотно и густо населена она
-Занудами типа братвы этого быдлана
-Нет, ну, подумаешь
-Да, ну и что, что
-
-[Припев]
-Из окна гостиничного номера своего
-Я телевизор выкинул на авто
-Авторитета местного, ну и что?
-Я рок-звезда, идите на
-Из окна гостиничного номера своего
-Я телевизор выкинул на авто
-Авторитета местного, ну и что?
-Я рок-звезда, идите на
-[Постприпев]
-Бум! Прогнулась крыша «гелендвагена»
-Ха-ха-ха! Смотрите все, какая вмятина
-Бум! Прогнулась крыша «гелендвагена»
-Ха-ха-ха! Смотрите все, какая вмятина
-
-[Куплет 2]
-А завтра снова в новый город нас поезд утащит
-Продюсер нам сказал, что скоро отпуск, но он обманщик
-Так что DJ, басист, клавишник и барабанщик
-Ещё не раз посмотрят вниз на летящий ящик
-Опа! На асфальте мелкие осколки кинескопа
-Хозяин тачки смотрит наверх со злобой
-Смотрите, вот он — уже на ресепшен потопал
-Давайте выпьем за меткость, куда же делся штопор?
-Как широка и необъятна наша страна
-Каждый день — новые лица, новые имена
-Безумный гастрольный график сводит меня с ума
-И вот именно поэтому
-
-[Припев]
-Из окна гостиничного номера своего
-Я телевизор выкинул на авто
-Авторитета местного, ну и что?
-Я рок-звезда, идите на
-Из окна гостиничного номера своего
-Я телевизор выкинул на авто
-Авторитета местного, ну и что?
-Я рок-звезда, идите на
-[Постприпев]
-Бум! Прогнулась крыша «гелендвагена»
-Ха-ха-ха! Смотрите все, какая вмятина
-Бум! Прогнулась крыша «гелендвагена»
-Ха-ха-ха! Смотрите все, какая вмятина
-Бум! Прогнулась крыша «гелендвагена»
-Смотрите все, какая вмятина
-Смотрите все, какая вмятина`
-            },
-            {
-                id: 4,
-                artist: "Саня Захрачук",
-                title: "Морок",
-                author: "Shaize",
-                lyrics: `[Припев]
-
-Я трансформатор что приводит в состояние шока
-Внутривенно 220, осторожно много тока
-Скока морока повсюду будто схемы без контакта
-Мои провода под напряжением рвутся в такте
-
-Я трансформатор что приводит в состояние шока
-Внутривенно 220, осторожно много тока
-Скока морока повсюду будто схемы без контакта
-Мои провода под напряжением рвутся в такте
-
-[Куплет 1]
-
-Они читают все про ***, но цензура - для них буй
-Ты будешь ближе всего к рэпу тут, целуя меня в хуй
-Скажи мне - что ты решил сам
-Не под давлением большинства
-Пренебрежение движением из-за слабости ума
-Вы не видите возможностей скрываясь за комфортном зоны
-Рэп иконы, и картонные короны, ересь
-Я вернулся в Эфес, Shaize апостол
-За просмотры в шортсах глубоко се в жопу
-Раскалённый шомпол сунете, не суйтесь
-You might also like
-Система работает
-Shaize
-Janice STFU
-Drake
-Baby
-Justin Bieber
-[Куплет 2]
-
-Слышишь сука, за своё умру как чертов Кацумото
-Что мода, на отсутствие чего-то светлого
-Типо где романтика? Где что-то милое?
-Давайте лучше им побольше бабок
-(Больше, больше)
-Пацаны ебать у вас рога
-На патриках баба-яга просит квартиру в 18 у студента
-На свиданье первом просит плату за аренду
-Мне похуй я Оскар Уайльд пишу о том
-Как пачкаю портреты..
-
-[Припев]
-
-Я трансформатор что приводит в состояние шока
-Внутривенно 220, осторожно много тока
-Скока морока повсюду будто схемы без контакта
-Мои провода под напряжением рвутся в такте
-
-Я трансформатор что приводит в состояние шока
-Внутривенно 220, осторожно много тока
-Скока морока повсюду будто схемы без контакта
-Мои провода под напряжением рвутся в такте`
-            },
-
-            // ===== РЫЖКОВА ЕКАТЕРИНА =====
-            {
-                id: 5,
-                artist: "Рыжкова Екатерина",
-                title: "Потерянный рай",
-                author: "Ария",
-                lyrics: `[Куплет 1]
-От края до края
-Небо в огне сгорает
-И в нём исчезают все надежды и мечты
-Но ты засыпаешь
-И ангел к тебе слетает
-Смахнёт твои слёзы, и во сне смеёшься ты
-
-[Припев]
-Засыпай, на руках у меня засыпай
-Засыпай под пенье дождя
-Далеко, там где неба кончается край
-Ты найдёшь потерянный рай
-
-[Куплет 2]
-Во сне хитрый демон
-Может пройти сквозь стены
-Дыханье у спящих он умеет похищать
-Бояться не надо
-Душа моя будет рядом
-Твои сновиденья до рассвета охранять
-
-[Припев]
-Засыпай, на руках у меня засыпай
-Засыпай под пенье дождя
-Далеко, там где неба кончается край
-Ты найдёшь потерянный рай
-You might also like
-Беспечный Ангел (Careless Angel)
-Ария (Aria)
-OMEGA
-PHARAOH & Destroy Lonely
-Осколок льда (Shard of Ice)
-Ария (Aria)
-[Гитарное соло]
-
-[Куплет 3]
-Подставлю ладони
-Их болью своей наполни
-Наполни печалью, страхом гулкой темноты
-И ты не узнаешь
-Как небо в огне сгорает
-И жизнь разбивает все надежды и мечты
-
-[Припев]
-Засыпай, на руках у меня засыпай
-Засыпай под пенье дождя
-Далеко, там где неба кончается край
-Ты найдёшь потерянный рай
-
-[Бридж]
-В мире снов, в мире снов
-В мире снов, в мире снов
-В мире снов, в мире снов
-Все надежды и мечты
-
-[Инструментальное аутро]`
-            },
-            {
-                id: 6,
-                artist: "Рыжкова Екатерина",
-                title: "Я свободен",
-                author: "Ария",
-                lyrics: `Надо мною тишина
-Небо, полное дождя
-Дождь проходит сквозь меня
-Но боли больше нет
-Под холодный шёпот звёзд
-Мы сожгли последний мост
-И всё в бездну сорвалось
-Свободным стану я
-От зла и от добра
-Моя душа была на лезвии ножа
-
-[Куплет 2]
-Я бы мог с тобою быть
-Я бы мог про всё забыть
-Я бы мог тебя любить
-Но это лишь игра
-В шуме ветра за спиной
-Я забуду голос твой
-И о той любви земной
-Что нас сжигала в прах
-И я сходил с ума
-В моей душе нет больше места для тебя
-You might also like
-OMEGA
-PHARAOH & Destroy Lonely
-ИГРЫ (GAMES)
-Toxi$ & GENSYXA
-Рапсодия Конца Света (ROTEOTW)
-GONE.Fludd
-[Припев]
-Я свободен, словно птица в небесах
-Я свободен, я забыл, что значит страх
-Я свободен с диким ветром наравне
-Я свободен наяву, а не во сне
-
-[Куплет 3]
-Надо мною тишина, небо полное огня
-Свет проходит сквозь меня
-И я свободен вновь
-Я свободен от любви
-От вражды и от молвы
-От предсказанной судьбы
-И от земных оков, от зла и от добра
-В моей душе нет больше места для тебя
-
-[Припев]
-Я свободен, словно птица в небесах
-Я свободен, я забыл, что значит страх
-Я свободен с диким ветром наравне
-Я свободен наяву, а не во сне
-Я свободен, словно птица в небесах
-Я свободен, я забыл, что значит страх
-Я свободен с диким ветром наравне
-Я свободен наяву, а не во сне
-Я свободен, словно птица в небесах
-Я свободен, я забыл, что значит страх
-Я свободен с диким ветром наравне
-Я свободен наяву, а не во сне
-Я свободен, я свободен`
-            },
-            {
-                id: 7,
-                artist: "Рыжкова Екатерина",
-                title: "Нева",
-                author: "5nizza",
-                lyrics: `[Куплет 1]
-Спроси Неву
-Ты знаешь я давно живу
-Уйти куда
-Туда, где время не вода
-С собой возьми
-И я возьму с собой тебя
-Мне объясни
-Что слишком мало декабря
-Нам
-
-[Куплет 2]
-Смотри в меня
-Сотри себя и будь во мне
-В последний раз
-Твоя вода в моем огне
-Снега немы
-Немыслимы и эти сны
-Они над ледяным унынием не властны
-
-[Припев]
-Нева-нева-нева-неважно
-Ни боли, ни жажды
-Крылатым умирает каждый
-Рождая дожди
-Нева-нева-нева-неважно
-Ни боли, ни жажды
-Умрет и наш мираж вчерашний
-Однажды дожди
-Льют
-Бьют в стекло
-О-о-о
-Люблю светло
-You might also like
-Весна (Правильная версия) (Spring)
-5’nizza
-Стрела (Arrow)
-5’nizza
-Ягода (Berry)
-Лев Печеньев (Lev Pecheniev) & БЫДЛОЦЫКЛ (BYDLOTSYKL)
-[Куплет 3]
-Выше или ниже, я тебя не вижу
-Нigher or lower
-Черными цепями оцепили памяти острова
-За закрытыми дверями
-Море времени теряем
-Все, что мы узнаем
-Не расскажем им
-
-[Припев]
-Нева-нева-нева-неважно
-Ни боли, ни жажды
-Крылатым умирает каждый
-Рождая дожди
-Нева-нева-нева-неважно
-Ни боли, ни жажды
-Умрет и наш мираж вчерашний
-Однажды дожди
-Нева-нева-нева-неважно
-Ни боли, ни жажды
-Крылатым умирает каждый
-Однажды дожди
-Льют
-Бьют в стекло
-О-о-о
-Люблю светло
-[Куплет 4]
-Молчание
-Твое во мне растает, тай
-На дне тебя
-Одни живут случайные
-Течения
-Ни ты мы не давали обещания
-Не разводить мосты
-
-[Припев]
-Нева-нева-нева-неважно
-Ни боли, ни жажды
-Крылатым умирает каждый
-Рождая дожди
-Нева-нева-нева-неважно
-Ни боли, ни жажды
-Умрет и наш мираж вчерашний
-Однажды дожди
-Льют
-Бьют в стекло
-О-о-о
-Люблю светло`
-            },
-
-            // ===== КУРНОСОВ ВЛАДИМИР =====
-            {
-                id: 8,
-                artist: "Курносов Владимир",
-                title: "Е=mc²",
-                author: "Ундервуд",
-                lyrics: `[Куплет 1]
-Со второго пути вдоль волшебных равнин
-Уходил скорый поезд "Москва-Кокаин"
-Ему мы сделали ручкой бай-бай
-Наши души чисты как искусственный снег
-Ускорять нас не надо, мы и так лучше всех
-А остальное - в кавычки, бай-бай
-
-[Припев]
-E-e-e-e, Е=mc²
-E-e-e-e, Е=mc²
-
-[Куплет 2]
-Мы на атомной бомбе займемся любовью
-Никого рядом нет, только блендеры с кровью
-Все остальные напитки бай-бай
-Мы не ждем от судьбы соблазнительных поз
-Бесконечность и вечность — хороший прогноз
-А остальные осадки бай-бай
-
-[Припев]
-E-e-e-e, Е=mc²
-E-e-e-e, Е=mc²`
-            },
-            {
-                id: 9,
-                artist: "Курносов Владимир",
-                title: "Гагарин, я Вас любила",
-                author: "Ундервуд",
-                lyrics: `[Куплет 1]
-Он обернулся простой такой
-И белозубый, незнакомый
-Пригладил волосы рукой
-Пока ещё не сведен оскомой
-
-Добрый-добрый рот его
-Нежной-нежной щетиной рыжей
-Касался. Пусть бы был никто!
-Прощай, прощай, родной, бесстыжий
-
-[Припев]
-Жизнь била, била, да
-Жизнь крыла спалила
-Гагарин, я Вас любила
-Гагарин, я Вас любила
-Гагарин, я Вас любила
-Гагарин, я Вас любила
-
-[Куплет 2]
-Не знал он после, как долго я
-Плыла осколком его медали
-И в спину била его струя
-И жал он молча свои педали
-Больно-больно потом упал
-Расшибился. Из-под обломков
-Извлек себя и начертал
-По фюзеляжу златой иголкой
-You might also like
-Houdini
-Eminem
-52 & HAUNTED
-ALBLAK 52 & kizaru
-Phoenix
-9mice & Kai Angel
-[Припев]
-Жизнь била, била, да
-Жизнь крыла спалила
-Гагарин, я Вас любила
-Гагарин, я Вас любила
-Гагарин, я Вас любила
-Гагарин, я Вас любила
-
-[Куплет 3]
-Как будто правда, что Млечный Путь
-Господь спустил ему на лампасы
-Его погоны горят, как ртуть
-Он так прекрасен, что нас колбасит
-Белым светом наполнен он
-Добрый, славный, себе смеётся
-Душа его, как полигон
-Ему светло, и ей поётся
-
-[Припев]
-Жизнь била, била, да
-Жизнь крыла спалила
-Гагарин, я Вас любила
-Гагарин, я Вас любила
-Гагарин, я Вас любила
-Гагарин, я Вас любила`
-            },
-            {
-                id: 10,
-                artist: "Курносов Владимир",
-                title: "Кукушка",
-                author: "Кино",
-                lyrics: `[Куплет 1]
-Песен, ещё ненаписанных, сколько?
-Скажи, кукушка, пропой
-В городе мне жить или на выселках?
-Камнем лежать
-Или гореть звездой, звездой?
-
-[Припев]
-Солнце моё, взгляни на меня
-Моя ладонь превратилась в кулак
-И если есть порох, дай огня
-Вот так
-
-[Куплет 2]
-Кто пойдёт по следу одинокому?
-Сильные да смелые
-Головы сложили в поле, в бою
-Мало, кто остался в светлой памяти
-В трезвом уме да с твёрдой
-Рукой в строю, в строю
-
-[Припев]
-Солнце моё, взгляни на меня
-Моя ладонь превратилась в кулак
-И если есть порох, дай огня
-Вот так
-You might also like
-Группа крови (Blood Type)
-КИНО (KINO)
-Звезда по имени Солнце (Star Called Sun)
-КИНО (KINO)
-Пачка сигарет (Pack of Cigarettes)
-КИНО (KINO)
-[Куплет 3]
-Где же ты теперь, воля вольная?
-С кем же ты сейчас
-Ласковый рассвет встречаешь, ответь
-Хорошо с тобой, да плохо без тебя
-Голову да плечи
-Терпеливые под плеть, под плеть
-
-[Припев]
-Солнце моё, взгляни на меня
-Моя ладонь превратилась в кулак
-И если есть порох, дай огня
-Вот так
-Солнце моё, взгляни на меня
-Моя ладонь превратилась в кулак
-И если есть порох, дай огня
-Вот так`
-            },
-
-            // ===== ВЕРА БЛАГОВЕЩЕНСКАЯ =====
-            {
-                id: 11,
-                artist: "Вера Благовещенская",
-                title: "Как на войне",
-                author: "Агата Кристи",
-                lyrics: `[Куплет 1]
-Ляг, отдохни и послушай, что я скажу
-Я терпел, но сегодня я ухожу
-Я сказал, успокойся и рот закрой
-Вот и всё, до свидания, чёрт с тобой
-
-[Припев]
-Я на тебе, как на войне
-А на войне, как на тебе
-Но я устал, окончен бой
-Беру портвейн, иду домой
-Окончен бой, зачах огонь
-И не осталось ничего
-А мы живём
-А нам с тобою повезло назло
-
-[Куплет 2]
-Боль — это боль, как её ты не назови
-Это страх — там, где страх, места нет любви
-Я сказал, успокойся и рот закрой
-Вот и все, до свидания, чёрт с тобой
-
-[Припев]
-Я на тебе, как на войне
-А на войне, как на тебе
-Но я устал, окончен бой
-Беру портвейн, иду домой
-Окончен бой, зачах огонь
-И не осталось ничего
-А мы живём
-А нам с тобою повезло назло
-You might also like
-Phoenix
-9mice & Kai Angel
-Чемпионы (Champions)
-Polyana, OG Buda, MAYOT, молодой калуга (molodoy kaluga) & 163ONMYNECK
-Ночь (Night)
-DK
-[Проигрыш]
-
-[Припев]
-Я на тебе, как на войне
-А на войне, как на тебе
-Но я устал, окончен бой
-Беру портвейн, иду домой
-Окончен бой, зачах огонь
-И не осталось ничего
-А мы живём
-А нам с тобою повезло назло`
-            },
-            {
-                id: 12,
-                artist: "Вера Благовещенская",
-                title: "Капитал",
-                author: "Ляпис Трубецкой",
-                lyrics: `[Куплет 1]
-Я ем на обед золотые слитки,
-Бриллиантовый десерт, нефтяные сливки.
-Мне имя – Вельзевул, хозяин стратосферы,
-Я нереальный cool, мой respect без меры.
-
-[Припев]
-В левой руке «Сникерс», в правой руке «Марс»,
-Мой пиар-менеджер – Карл Маркс.
-В левой руке «Сникерс», в правой руке «Марс»,
-Мой пиар-менеджер – Карл Маркс.
-Капитал!
-
-[Куплет 2]
-Я ем города, морями запиваю,
-Моя борода небо заслоняет.
-Громы и молнии, туманы и дожди.
-Мои ботинки лижут министры и вожди.
-
-[Припев]
-В левой руке «Сникерс», в правой руке «Марс»,
-Мой пиар-менеджер – Карл Маркс.
-В левой руке «Сникерс», в правой руке «Марс»,
-Мой пиар-менеджер – Карл Маркс.
-Капитал!
-
-В левой руке «Сникерс», в правой руке «Марс»,
-Мой пиар-менеджер – Карл Маркс.
-Моё лицо – Мадонна, внутри из тухлых груш.
-Все – на колени, оркестр – туш!
-Капитал!`
-            },
-
-            // ===== СЕРГЕЕВ ВЛАДИМИР =====
-            {
-                id: 14,
-                artist: "Сергеев Владимир",
-                title: "Романс",
-                author: "Диктофон",
-                lyrics: `[Куплет 1]
-Дай мне несколько причин
-Почему твой выбор — я?
-Ненавистен и любим
-Венерой в секонд-хенд мехах
-Твоя юбка-карандаш
-Моя ластик-голова
-Твои арийские глаза
-Как случайный прохожий
-
-[Предприпев]
-Напомни мне имя своё?
-
-[Припев]
-Это городской романс
-И последний киносеанс
-Это наш счастливый шанс
-Добраться до дома
-Это городской романс
-Я не пил, а, сука, пьян
-Пять-гидрокситриптофан
-
-[Куплет 2]
-Не думай больше о судьбе
-Весна войдёт в свои права
-Мы строим памятник себе
-Рисуя в лифтах: "Здесь был я"
-Напрасно грудь твоя полна
-Желанием, болью и тоской
-Под сухой, как мел, землёй
-Мы друг друга полюбим
-You might also like
-Впереди (Ahead)
-Дайте танк (!) (Daite Tank)
-Одна любовь (One love)
-Баста (Basta)
-Любопытно (Curiously)
-Диктофон (Diktofon)
-[Предприпев]
-Напомни мне место своё?
-
-[Припев]
-Это городской романс
-И последний киносеанс
-Это наш счастливый шанс
-Добраться до дома
-Это городской романс
-Я не пил, а, сука, пьян
-Пять-гидрокситриптофан
-
-[Бридж]
-Напомни мне имя своё?
-Напомни мне место своё?
-Напомни мне должность свою?
-Напомни мне — кто я такой?
-
-[Припев]
-Это городской романс
-И последний киносеанс
-Это наш счастливый шанс
-Добраться до дома
-Это городской романс
-Я не пил, а, сука, пьян
-Пять-гидрокситриптофан
-[Куплет 3]
-Юность плюнула нам в след
-Тебе идёт к лицу весна
-На все вопросы есть ответ
-Что я — не тот, а ты — не та
-Что могло быть хуже чем
-Наш первый поцелуй?
-Холод голых, белых стен
-Ты, хоть, прощаясь, не забудь
-
-[Аутро]
-Напомнить мне имя своё
-Э-э-эй
-У`
-            },
-            {
-                id: 15,
-                artist: "Сергеев Владимир",
-                title: "Корсары",
-                author: "Йовин",
-                lyrics: `Рука ласкает шпаги разукрашенный эфес,
-Никто не знает, где гоняет нас проклятый бес.
-Корабль старый верен капитану, словно пес.
-Да, мы корсары! Наливай, чтоб весело жилось.
-За пистолеты! С Богом, помолясь - за тесаки!
-Ты чуешь - где-то ждут нас золотые сундуки!
-Небесной кары нам не избежать, но это блажь!
-Идут корсары, идут корсары, на абордаж.
-
-Стакан согреет, пьем еще не самый крайний раз.
-Висеть на рее каждому назначено из нас.
-Смеется в кружке Роджера приятельский оскал.
-Готовьте пушки! Эй, кого еще Господь послал?
-За пистолеты! Жребий нам достался непростой.
-Душа согрета чаяньем добычи золотой.
-В каком кошмаре видится вам черный парус наш?
-Идут корсары, идут корсары на абордаж.
-
-И пусть на суше ждет петля, что даже не смешно,
-А наши души дьяволу запроданы давно,
-Плевать на это! Ветер наполняет паруса!
-За пистолеты! К дьяволу, на кой нам небеса?!
-За пистолеты! Мир запомнит наши имена!
-Конец куплета вдаль уносит пенная волна.
-Прибавим жару, пусть повеселится экипаж!
-Идут корсары,ха-ха, идут корсары на абордаж,
-На абордаж, на абордаж!`
-            },
-            {
-                id: 16,
-                artist: "Сергеев Владимир",
-                title: "Я тебе не верю",
-                author: "Григорий Лепс",
-                lyrics: `[Куплет 1: Григорий Лепс, Ирина Аллегрова]
-В комнате темно слишком, слишком
-Много пустоты, я стал лишним
-Некуда бежать, ты успела
-Всё мне рассказать, что хотела
-Ветер за окном по привычке
-Гонит облака, словно спичкой
-Солнце зажигать будет небо
-И наступит день, где ты не был
-
-[Предприпев: Григорий Лепс & Ирина Аллегрова]
-Смотришь мне в глаза, сколько можно лгать?
-Проще самому сказать об этом
-Что любовь была перестрелкой душ
-Мне стало скучно!
-
-[Припев: Григорий Лепс & Ирина Аллегрова, Ирина Аллегрова, Григорий Лепс]
-Я тебе не верю!
-Ты сон вчерашний, который мне пророчил слёзы
-Я тебе не верю
-Ты снег зимы прошедшей, он давно растаял
-Я тебе не верю
-Ты солнце, утонувшее в воде холодной
-Я тебе не верю
-Ты всё, что было у меня!
-Но я тебе не верю!
-You might also like
-Карма (Karma)
-OG Buda & Баста (Basta)
-SAVE DAT
-Toxi$ & Егор Крид (Egor Kreed)
-БРАТ (BROTHER)
-MACAN
-[Куплет 2: Ирина Аллегрова, Григорий Лепс]
-Спрятались в лесах наши птицы
-Время разорвать, сжечь страницы
-Где про нас с тобой
-Где сумела стать твоей тоской без предела
-Ветер за окном по привычке
-Гонит облака, словно спичкой
-Солнце зажигать будет небо
-И наступит день, где я не был
-
-[Предприпев: Григорий Лепс & Ирина Аллегрова]
-Смотришь мне в глаза, сколько можно лгать?
-Проще самому сказать об этом
-Что любовь была перестрелкой душ
-Мне стало скучно!
-
-[Припев: Григорий Лепс & Ирина Аллегрова, Ирина Аллегрова, Григорий Лепс]
-Я тебе не верю!
-Ты сон вчерашний, который мне пророчил слёзы
-Я тебе не верю
-Ты снег зимы прошедшей, он давно растаял
-Я тебе не верю
-Ты солнце, утонувшее в воде холодной
-Я тебе не верю
-Ты всё, что было у меня! Я-я-у!
-[Инструментал]
-
-[Припев: Григорий Лепс & Ирина Аллегрова, Ирина Аллегрова, Григорий Лепс]
-Я тебе не верю!
-Ты сон вчерашний, который мне пророчил слёзы
-Я тебе не верю
-Ты снег зимы прошедшей, он давно растаял
-Я тебе не верю
-Ты солнце, утонувшее в воде холодной
-Я тебе не верю
-Ты всё, что было у меня!
-Но я тебе не верю!`
-            },
-
-            // ===== ЗИЛЬБЕРШТЕЙН АРПИНЕ + АРАКЕЛЯН ЕКАТЕРИНА =====
-            {
-                id: 17,
-                artist: "Зильберштейн Арпине + Аракелян Екатерина",
-                title: "Mer Siro Ashuny",
-                author: "Ruben Hakhverdyan",
-                lyrics: `-`
-            },
-            {
-                id: 18,
-                artist: "Зильберштейн Арпине + Аракелян Екатерина",
-                title: "Aravind, Arevin",
-                author: "Lava Eli",
-                lyrics: `-`
-            },
-            {
-                id: 19,
-                artist: "Зильберштейн Арпине + Аракелян Екатерина",
-                title: "Bari Aragil",
-                author: "Serj Tankian",
-                lyrics: `-`
-            },
-            {
-                id: 20,
-                artist: "Зильберштейн Арпине + Аракелян Екатерина",
-                title: "Ari Erb Ush e",
-                author: "Armine Hayrapetyan",
-                lyrics: `-`
-            },
-
-            // ===== КУПРИЯНОВА СОФЬЯ =====
-            {
-                id: 24,
-                artist: "Куприянова Софья",
-                title: "Young And Beautiful",
-                author: "Lana Del Rey",
-                lyrics: `I've seen the world, done it all, had my cake now
-Diamonds, brilliant, and Bel Air now
-Hot summer nights, mid-July
-When you and I were forever wild
-The crazy days, city lights
-The way you'd play with me like a child
-
-Will you still love me when I'm no longer young and beautiful?
-Will you still love me when I got nothing but my aching soul?
-I know you will, I know you will, I know that you will
-Will you still love me when I'm no longer beautiful?
-
-I've seen the world, lit it up as my stage now
-Channeling angels in the new age now
-Hot summer days, rock and roll
-The way you'd play for me at your show
-And all the ways I got to know
-Your pretty face and electric soul
-
-Will you still love me when I'm no longer young and beautiful?
-Will you still love me when I got nothing but my aching soul?
-I know you will, I know you will, I know that you will
-Will you still love me when I'm no longer beautiful?
-
-Dear Lord, when I get to Heaven
-Please let me bring my man
-When he comes, tell me that you'll let him in
-Father, tell me if you can
-All that grace, all that body
-All that face makes me wanna party
-He's my sun, he makes me shine like diamonds
-
-Will you still love me when I'm no longer young and beautiful?
-Will you still love me when I got nothing but my aching soul?
-I know you will, I know you will, I know that you will
-Will you still love me when I'm no longer beautiful?
-
-Will you still love me when I'm no longer beautiful?
-Will you still love me when I'm not young and beautiful?`
-            },
-            {
-                id: 25,
-                artist: "Куприянова Софья",
-                title: "Riptide",
-                author: "Vance Joy",
-                lyrics: `I was scared of dentists and the dark
-I was scared of pretty girls and starting conversations
-Oh, all my friends are turning green
-You're the magician's assistant in their dream
-
-Oh, and they come unstuck
-
-Lady, running down to the riptide
-Taken away to the dark side
-I wanna be your left hand man
-I love you when you're singing that song and
-I got a lump in my throat 'cause
-You're gonna sing the words wrong
-
-There's this movie that I think you'll like
-This guy decides to quit his job and heads to New York City
-This cowboy's running from himself
-And she's been living on the highest shelf
-
-Oh, and they come unstuck
-
-Lady, running down to the riptide
-Taken away to the dark side
-I wanna be your left hand man
-I love you when you're singing that song and
-I got a lump in my throat 'cause
-You're gonna sing the words wrong
-
-I just wanna, I just wanna know
-If you're gonna, if you're gonna stay
-I just gotta, I just gotta know
-I can't have it, I can't have it any other way
-I swear she's destined for the screen
-Closest thing to Michelle Pfeiffer that you've ever seen, oh
-
-Lady, running down to the riptide
-Taken away to the dark side
-I wanna be your left hand man
-I love you when you're singing that song and
-I got a lump in my throat 'cause
-You're gonna sing the words wrong
-
-Oh lady, running down to the riptide
-Taken away to the dark side
-I wanna be your left hand man
-I love you when you're singing that song and
-I got a lump in my throat 'cause
-You're gonna sing the words wrong
-
-Oh lady, running down to the riptide
-Taken away to the dark side
-I wanna be your left hand man
-I love you when you're singing that song and
-I got a lump in my throat 'cause
-You're gonna sing the words wrong
-I got a lump in my throat 'cause you're gonna sing the words wrong`
-            },
-
-            // ===== КАПУСТИН ЕГОР =====
-            {
-                id: 26,
-                artist: "Капустин Егор",
-                title: "Весна",
-                author: "4 Позиции Бруно",
-                lyrics: `[Куплет 1]
-Ты смотришь в зеркало, что видишь там?
-Морщины, рубцы, улыбка, шрамы
-Ты щуришь глаза, ты давишь зевок
-Ты немножечко болен. Ты слегка одинок
-Дети дразнят тебя и смеются вслед
-Ты завидуешь им, ты не любишь их смех
-Ты пока что способен дать им отпор
-Но молчишь и уныло ныряешь во двор
-
-[Припев]
-В углу икона, бутылки вдоль пола
-И я почти не выхожу из дома
-И ты всё реже выходишь тоже
-И мы всё ближе, и мы всё сможем
-Слегка кусаю нательный крестик
-Ты снова рядом, мы снова вместе
-Ты нежно гладишь мои стигматы
-Я знаю, папа, не плачь, не надо
-
-[Куплет 2]
-Во дворе лай собак и цветение лип
-Но всё как-то не так
-Забегаешь в подъезд, вызываешь лифт
-Там прожжённые кнопки, окурки и вонь
-Но в заплёванных стенах стихает боль
-Ты приходишь в себя, отступает страх
-Свет в кабинке погас
-Ты сидишь в темноте, сидишь на кортах
-По стене стекает бордовая слизь
-И лифт улетает из дома ввысь
-
-[Припев]
-В углу икона, бутылки вдоль пола
-И я почти не выхожу из дома
-И ты всё реже выходишь тоже
-И мы всё ближе, и мы всё сможем
-Слегка кусаю нательный крестик
-Ты снова рядом, мы снова вместе
-Ты нежно гладишь мои стигматы
-Я знаю, папа, не плачь, не надо`
-            },
-            {
-                id: 27,
-                artist: "Капустин Егор",
-                title: "Супермен",
-                author: "КРУПНОГАБАРИТНЫЕ ОТХОДЫ",
-                lyrics: `-`
-            },
-            {
-                id: 28,
-                artist: "Капустин Егор",
-                title: "Бетон с молоком",
-                author: "КРУПНОГАБАРИТНЫЕ ОТХОДЫ",
-                lyrics: `-`
-            },
-
-            // ===== ЗАВАДСКИЙ ДМИТРИЙ =====
-            {
-                id: 29,
-                artist: "Завадский Дмитрий",
-                title: "Ля-ля тополя",
-                author: "Би-2",
-                lyrics: `[Куплет 1]
-Сколько воды утекло,
-И теперь всё равно: что кровь, что вино.
-Больше не буду жалеть.
-Попробуй ответь, кому повезло? 
-
-[Припев]
-Ля-ля, тополя! Сбежим с корабля
-На бал в санитарной карете.
-Ля-ля, тополя! Всем доброго дня,
-И пусть не кончается лето. 
-
-[Куплет 2]
-Слёзы ползут по лицу,
-И твой поцелуй горчит словно хмель.
-Если Земля – это шар,
-То больная душа устоит ли на ней? 
-
-[Припев]
-Ля-ля, тополя! Сбежим с корабля
-На бал в санитарной карете.
-Ля-ля, тополя! Всем доброго дня,
-И пусть не кончается лето.`
-            },
-            {
-                id: 30,
-                artist: "Завадский Дмитрий",
-                title: "Чувства",
-                author: "Animal ДжаZ",
-                lyrics: `[Куплет 1]
-Я бился лбом о дно небес
-И в дыры чёрные падал.
-И был родным мне тёмный лес
-И заповедные гады.
-И я бродил среди огня,
-Руки сжимая до хруста.
-И всё, что было у меня…
-
-[Припев]
-Вот тебе чувства –
-В них и причина
-Любого искусства.
-Мы ранены грустью,
-Но где-то на дне наших глаз
-Я вижу надежду.
-Между
-Нами границы, страницы,
-Вершины и катакомбы.
-Время любить, не время
-Разбрасывать бомбы! 
-
-[Куплет 2]
-И я лежал у океана,
-И звёзды били мне под дых.
-Я помнил все века и страны,
-Вечность сжимая в один миг.
-И были все смертельны раны,
-Их я разменивал на стих:
-Он о тебе был, как ни странно. 
-
-[Припев]
-Вот тебе чувства –
-В них и причина
-Любого искусства.
-Мы ранены грустью,
-Но где-то на дне наших глаз
-Я вижу надежду.
-Между
-Нами границы, страницы,
-Вершины и катакомбы.
-Время любить, не время
-Разбрасывать бомбы! 
-
-[Припев] (повтор)
-Вот тебе чувства –
-В них и причина
-Любого искусства.
-Мы ранены грустью,
-Но где-то на дне наших глаз
-Я вижу надежду.
-Между
-Нами границы, страницы,
-Вершины и катакомбы.
-Время любить, не время
-Разбрасывать бомбы!
-
-Чувства –
-В них и причина
-Любого искусства.
-Мы ранены грустью,
-Но где-то на дне наших глаз
-Я вижу надежду.
-Между
-Нами границы, страницы,
-Вершины и катакомбы.
-Время любить, не время
-Разбрасывать бомбы!`
-            },
-            {
-                id: 31,
-                artist: "Завадский Дмитрий",
-                title: "Просвистела",
-                author: "ДДТ",
-                lyrics: `Просвистела и упала на столе,
-Чуть поела, да скатилась по золе.
-Убитых песен, да - мне нечего терять.
-Мир так тесен - дай-ка, брат, тебя обнять.
-
-Всюду черти - надави, брат, на педаль.
-Час до смерти, да сгоревшего не жаль,
-А в чистом поле - ангелочки, васильки.
-Мы на воле, и нет ни гари ни тоски.
-
-А на небе встретят Сашка да Илья,
-Хватит хлеба, да сто грамм - без них нельзя.
-Что нам плакать, там не срам, чего страдать.
-Рай не слякоть, вьюга наша благодать.
-
-Все расскажем про восход и про закат,
-Горы сажи да про горький мармелад,
-Что доели, когда закончили войну.
-Да как сели мы на Родине - в плену.
-
-Просвистела и упала на столе.
-Чуть поела, да уснула на золе
-Убитых песен, да мне нечего терять.
-Мир так тесен, дай-ка, брат, тебя обнять.`
-            },
-
-            // ===== КАМЕННЫЙ ЛЕВ =====
-            {
-                id: 32,
-                artist: "Каменный Лев",
-                title: "Временно",
-                author: "авторская",
-                lyrics: `Так скоро проходят минуты секунды  
-И я убегаю не видя маршруты  
-Меняются быстро пейзажи картины  
-Теряюсь в витринах пустых магазинов  
-
-Возьми туда где ещё не был  
-Вспомни что забыл давно  
-Сделай небо белым  
-Белым мелом за своим окном  
-Это временно  
-Это временно  
-
-Теряюсь в массивах жилых некрасивых  
-Там солнца не видно и нет перспективы  
-Я вырвусь из этой душной квартиры  
-И прыгну в окно  
-
-Возьми туда где ещё не был  
-Вспомни что забыл давно  
-Сделай небо белым  
-Белым мелом за своим окном  
-Это временно  
-Это временно  
-
-Возьми туда где ещё не был  
-Вспомни что забыл давно  
-Сделай небо белым  
-Белым мелом за своим окном  
-Это временно  
-Это временно
-`
-            },
-            {
-                id: 33,
-                artist: "Каменный Лев",
-                title: "Теряюсь",
-                author: "авторская",
-                lyrics: `Меняю места
-Теряю людей
-Я хочу домой
-Я хочу домой
-Просто устал
-И нет идей
-Где теперь мой
-Где теперь мой
-
-Куплю гараж, сниму квартиру
-В любой дыре, окраине мира
-Вещи закину, матрас и гитару
-Мне хватит, я все же не старый
-
-Там, где нас ждут
-Пыль мансард
-Или соль кают
-
-Я не доеду
-До стоянки
-Где можно уснуть
-Где можно уснуть
-Но я верю
-На полустанке
-Укажут мне путь
-Укажут мне путь
-
-Куплю гараж, сниму квартиру
-В любой дыре, окраине мира
-Вещи закину, матрас и гитару
-Мне хватит, я все же не старый
-
-Там, где нас ждут
-Пыль мансард
-Или соль кают
-`
-            },
-            {
-                id: 34,
-                artist: "Каменный Лев",
-                title: "Поезда",
-                author: "авторская",
-                lyrics: `куплет 1
-Мы будем проезжать сонные города
-Скамейки на вокзалах пустые дома
-До рассвета играть в карты
-И мешать всем людям спать
- едем в поезде мы едем в поезде
-
-припев
-Густые леса
-Тянутся провода
-Меня затягивает в транс
-Бесконечный вид полян
-Ожидание остановки меня сводит с ума
-Вечность быть в коробке это моя судьба
-
-Куплет 2
-Сквозь стёкла — лишь пепел и ржавые сны,
-где ветер выл в пустые телефоны.
-Мы бредим под стук колёс и светофоров звон,
-А в темноте — только вспышки, да чей-то сдавленный стон.
-
-Припев
-Густые леса
-Тянутся провода
-Меня затягивает в транс
-Бесконечный вид полян
-Ожидание остановки меня сводит с ума
-Вечность быть в коробке это моя судьба
-
-Бридж
-мертвые тени в разбитых вагонах,
-Поезд воет, как зверь на крюке.
-Вечность это когда за окнами
-все утонуло в пустоте 
-А мы А мы
-лишь пыль на языке у утра,
-Колея в небо вонзилась, как игла. Здесь не до шуток
-`
-            },
-            {
-                id: 13,
-                artist: "Каменный Лев",
-                title: "Одиночество",
-                author: "авторская",
-                lyrics: `Куплет 1
-Когда на сцене
-Закончится звук
-И ты без цели 
-Никому не друг 
-Вчера уже нет
-Сегодня ещё будет 
-Через шторы свет
-По стенам крутит
-
-Бридж(2 раза)
-боялся людей 
-не одиночества 
-В прятках сильней 
-Был кого хочешь я
-Теперь боюсь
-Пустой квартиры
-Я так боюсь 
-Своего мира
-
+            { id: 1,  artist_id: 1,  title: "Тяни!",                          author: "Король и Шут" },
+            { id: 2,  artist_id: 1,  title: "Невеста Полоза",                 author: "Мельница" },
+            { id: 3,  artist_id: 1,  title: "Belle",                          author: "Notre Dame de Paris" },
+
+            { id: 4,  artist_id: 2,  title: "Стук",                           author: "Кино" },
+            { id: 5,  artist_id: 2,  title: "Серенада трубадура",             author: "Муслим Магомаев" },
+            { id: 6,  artist_id: 2,  title: "Молитва",                        author: "БИ-2" },
+
+            { id: 7,  artist_id: 3,  title: "Still Loving You",               author: "Scorpions" },
+            { id: 8,  artist_id: 3,  title: "ПММЛ",                           author: "Земфира" },
+            { id: 9,  artist_id: 3,  title: "Under the Bridge",               author: "RHCP" },
+            { id: 10, artist_id: 3,  title: "Кустурица",                      author: "Братья Гримм" },
+
+            { id: 11, artist_id: 4,  title: "Knocking on Heaven's Door",      author: "Bob Dylan" },
+            { id: 12, artist_id: 4,  title: "Однажды мир прогнется под нас",  author: "Машина времени" },
+            { id: 13, artist_id: 4,  title: "No Surprises",                   author: "Radiohead" },
+            { id: 14, artist_id: 4,  title: "Метель",                         author: "ДДТ" },
+
+            { id: 15, artist_id: 5,  title: "Полковнику никто не пишет",      author: "БИ-2" },
+            { id: 16, artist_id: 5,  title: "Перемен",                        author: "Кино" },
+            { id: 17, artist_id: 5,  title: "Кукла колдуна",                  author: "Король и Шут" },
+            { id: 18, artist_id: 5,  title: "Последний герой",                author: "Кино" },
+
+            { id: 19, artist_id: 6,  title: "Dead Weight",                    author: "PVRIS" },
+            { id: 20, artist_id: 6,  title: "Еду, еду...",                    author: "Чиж & Co" },
+            { id: 21, artist_id: 6,  title: "Мышеловка",                      author: "Гражданская оборона" },
+
+            { id: 22, artist_id: 7,  title: "Those Who Wait",                 author: "Tommy Emmanuel" },
+            { id: 23, artist_id: 7,  title: "Angelina",                       author: "Tommy Emmanuel" },
+            { id: 24, artist_id: 7,  title: "Only Elliot",                    author: "Tommy Emmanuel" },
+            { id: 25, artist_id: 7,  title: "Ruby's Eyes",                    author: "Tommy Emmanuel" },
+            { id: 26, artist_id: 7,  title: "Fuel",                           author: "Tommy Emmanuel" },
+
+            { id: 27, artist_id: 8,  title: "Viva la Vida",                   author: "Coldplay" },
+            { id: 28, artist_id: 8,  title: "Scars on This Guitar",           author: "Bon Jovi" },
+            { id: 29, artist_id: 8,  title: "Ваше благородие",                author: "из х/ф «Белое солнце пустыни»" },
+            { id: 30, artist_id: 8,  title: "Сосны на морском берегу",              author: "Кино" },
+
+            { id: 31, artist_id: 9,  title: "we fell in love in october",     author: "girl in red" },
+            { id: 32, artist_id: 9,  title: "Sweater Weather",                author: "The Neighbourhood" },
+
+            { id: 33, artist_id: 10, title: "Есть только миг",                author: "Олег Анофриев" },
+            { id: 34, artist_id: 10, title: "Моей душе покоя нет",            author: "Алиса Фрейндлих и Андрей Мягков" },
+            { id: 35, artist_id: 10, title: "Красно-жёлтые дни",              author: "Кино" },
+
+            { id: 36, artist_id: 11, title: "До утра",                        author: "ОМБ" },
+            { id: 37, artist_id: 11, title: "Ненадолго",                      author: "ОМБ" },
+            { id: 38, artist_id: 11, title: "Дождь",                          author: "ОМБ" },
+            { id: 39, artist_id: 11, title: "Солнце",                         author: "ОМБ" },
+
+            { id: 40, artist_id: 12, title: "Это за окном рассвет",           author: "Браво" },
+
+            { id: 41, artist_id: 13, title: "Позови меня с собой",            author: "Алла Пугачёва" },
+            { id: 42, artist_id: 13, title: "Белая ночь",                     author: "Виктор Салтыков" },
+            { id: 43, artist_id: 13, title: "В последний раз",                author: "ВИА «Весёлые ребята»" },
+            { id: 44, artist_id: 13, title: "Искала",                         author: "Земфира" },
+
+            { id: 45, artist_id: 14, title: "-",                        author: "Кино" },
+            { id: 46, artist_id: 14, title: "Лесник",                         author: "Король и Шут" },
+            { id: 47, artist_id: 14, title: "Люди",                           author: "Дайте танк (!)" },
+
+            { id: 48, artist_id: 15, title: "—",                              author: "пока нет" },
+
+            { id: 49, artist_id: 16, title: "Истома",                         author: "Козел" },
+            { id: 50, artist_id: 16, title: "Ялта Парус",                     author: "Валентин Стрыкало" },
+
+            { id: 51, artist_id: 17, title: "Если ты со мной",                author: "Доминик Джокер" },
+            { id: 52, artist_id: 17, title: "Айсберг",                        author: "Папин Олимпос" },
+            { id: 53, artist_id: 17, title: "Всё как у людей",                author: "Noize MC" },
+
+            { id: 54, artist_id: 18, title: "Белая гвардия",                  author: "Белая Гвардия" },
+            { id: 55, artist_id: 18, title: "Ведьма и экзорцист",             author: "Norma Tale, SATAROVA" },
+            { id: 56, artist_id: 18, title: "Дедушке М",                      author: "Н. Гринько" },
+
+            { id: 57, artist_id: 19, title: "Девочка с флейтой",              author: "Веня Д'ркин" },
+            { id: 58, artist_id: 19, title: "Город Омск",                     author: "Смешарики" },
+            { id: 59, artist_id: 19, title: "За стеной летнего дождя",        author: "Старый Приятель" },
+            { id: 60, artist_id: 19, title: "Светлячок",                      author: "Черный Лукич" }
+        ];
+
+        // =============================================================
+        // ТЕКСТЫ
+        // Формат:  id_песни: `текст песни`,
+        // Если для песни текста нет — на странице автоматически
+        // показывается заглушка «Название — Автор».
+        //
+        // ▼▼▼ СЮДА ВСТАВЬ СВОЙ БЛОК ТЕКСТОВ ИЗ СТАРОГО ФАЙЛА ▼▼▼
+        // (всё, что было между  const LYRICS = {  и  };  )
+        // =============================================================
+
+        const LYRICS = {
+    // ── Ася Горковенко ── (тексты есть в анкете и в старом файле)
+    1:  `
+Прыгнул я в пустой колодец, чудом уцелел
+Но мне было все равно, я больше не хотел
+Видеть, как вокруг меня сходят все с ума
+Да, к тому же, не дает покоя мне красавица одна
+Что ей нужно от меня понять я не могу
+Вот и сейчас ее шаги я слышу наверху
+Умоляю, не пытайся вытащить меня
+Все равно не уцеплюсь за сброшенную вниз веревку я
+
+Тяни, ты все равно меня не вытянешь
+Тяни, я все равно останусь для тебя в тени
+Ничем не сможешь ты мне, милая, помочь
+С тобой я обречен, мечтаешь о любви
+А я-то тут причем?
+
+Паутиной я окутан с ног до головы
+На камнях белеют несъедобные грибы
+Наверху она стоит, не хочет уходить
+Непонятно ей, что невозможно меня переубедить...
+
+Тяни, ты все равно меня не вытянешь
+Тяни, я все равно останусь для тебя в тени
+Ничем не сможешь ты мне, милая, помочь
+С тобой я обречен, мечтаешь о любви
+А я-то тут причем?
+
+Мне не надо ничего, мне нужен лишь покой
+Точно знаю, почему я странный стал такой
+Я не то чтоб недоел, не то, что б недоспал
+Просто я от суеты и от непонимания устал...
+
+Тяни, ты все равно меня не вытянешь
+Тяни, я все равно останусь для тебя в тени
+Ничем не сможешь ты мне, милая, помочь
+С тобой я обречен, мечтаешь о любви
+А я-то тут причем?`,
+    2:  `Ай, то не пыль по лесной дороге стелется
+Ай, не ходи да беды не трогай, девица
+Колдовства не буди, отвернись, не гляди –
+Змей со змеицей женятся
+Лиха не ведала, глаз от беды не прятала
+Быть тебе, девица, нашей – сама виноватая!
+Над поляною хмарь – там змеиный ждёт царь
+За него ты просватана
+
+Удержи меня (Удержи меня)
+На шелкову постель уложи меня
+Ты ласкай меня (Ты ласкай меня)
+За водой одну не пускай меня
+Удержи меня (Удержи меня)
+На шелкову постель уложи меня
+Ты ласкай меня (Ты ласкай меня)
+За водой одну не пускай меня
+За водой одну (За водой)
+
+Зелье змеиное отыскать не сумею я
+Золото глаз на тебя поднять не посмею я
+Чешуёю загар – мне в осеннюю гарь
+Уходить вслед за змеями
+Пылью под пологом голос мне Полоза слышится
+Полные голода очи-золото в пол-лица
+Он зовет меня вниз: «Родная, спустись
+Обниму в тридцать три кольца!»
+
+Удержи меня (Удержи меня)
+На шелкову постель уложи меня
+Ты ласкай меня (Ты ласкай меня)
+За водой одну не пускай меня
+Удержи меня (Удержи меня)
+На шелкову постель уложи меня
+Ты ласкай меня (Ты ласкай меня)
+За водой одну не пускай меня
+За водой одну не пускай меня
+
+Не пускай меня, не пускай меня за водой
+
+Удержи меня`,
+    3:  `Свет
+Озарил мою больную душу
+Нет
+Твой покой я страстью не нарушу
+Бред
+Полночный бред терзает сердце мне опять
+О, Эсмеральда, я посмел тебя желать
+
+Мой тяжкий крест
+Уродства вечная печать
+Я состраданье за любовь готов принять
+Нет
+Горбун отверженный
+С проклятьем на челе
+Я никогда не буду счастлив на земле
+И после смерти мне не обрести покой
+Я душу дьяволу продам за ночь с тобой
+
+Рай
+Обещают рай твои объятья
+Дай
+Мне надежду, о, моё проклятье
+Знай
+Греховных мыслей
+Мне сладка слепая власть
+Безумец прежде
+Я не знал, что значит страсть
+
+Распутной девкой, словно бесом, одержим
+Цыганка дерзкая мою сгубила жизнь
+Жаль
+Судьбы насмешкою я в рясу облачён
+На муки адские навеки обречён
+И после смерти мне не обрести покой
+Я душу дьяволу продам за ночь с тобой
+
+Сон
+Светлый счастья сон мой, Эсмеральда
+Стон
+Грешной страсти стон мой, Эсмеральда
+Он
+Сорвался с губ и покатился камнем вниз
+Разбилось сердце белокурой Флёр-де-Лис
+
+Святая Дева, ты не в силах мне помочь
+Любви запретной не дано мне превозмочь
+Стой
+Не покидай меня, безумная мечта
+В раба мужчину превращает красота
+И после смерти мне не обрести покой
+Я душу дьяволу продам за ночь с тобой
+
+И днём и ночью лишь она передо мной
+И не Мадонне я молюсь, а ей одной
+Стой
+Не покидай меня, безумная мечта
+В раба мужчину превращает красота
+И после смерти мне не обрести покой
+Я душу дьяволу продам за ночь с тобой
+
+За ночь с тобой`,
+
+    // ── Болгарев Михаил ── (тексты есть в анкете и в старом файле)
+    4:  `Струн провода, ток по рукам,
+Телефон на все голоса говорит: «Пока!» Пора...
+И пальто на гвозде, шарф в рукаве
+И перчатки в карманах шепчут:
+«Подожди до утра!» До утра...
+Но странный стук зовёт: «В дорогу!»
+Может сердца, а может стук в дверь.
+И, когда я обернусь на пороге,
+Я скажу одно лишь слово: «Верь!»
+И опять на вокзал, и опять к поездам,
+И опять проводник выдаст бельё и чай,
+И опять не усну, и опять сквозь грохот колёс
+Мне послышится слово: «Прощай!»
+Но странный стук зовёт: «В дорогу!»
+Может сердца, а может стук в дверь.
+И, когда я обернусь на пороге,
+Я скажу одно лишь слово: «Верь!»
+Но странный стук зовёт: «В дорогу!»
+Может сердца, а может стук в дверь.
+И, когда я обернусь на пороге,
+Я скажу одно лишь слово: «Верь!»`,
+    5:  `Луч солнца золотого
+Тьмы скрыла пелена.
+И между нами снова
+Вдруг выросла стена
+
+Ночь пройдет, наступит утро ясное,
+Знаю, встреча нас с тобой ждет.
+Ночь пройдет, пройдет пора ненастная
+Солнце взойдет. Солнце взойдет.
+
+Петь птицы перестали,
+Свет звезд коснулся крыш.
+В час грусти и печали
+Ты голос мой услышь.
+
+Ночь пройдет, наступит утро ясное,
+Знаю, встреча нас с тобой ждет.
+Ночь пройдет, пройдет пора ненастная
+Солнце взойдет. Солнце взойдет.`,
+    6:  `Тише, души на крыше медленно дышат перед прыжком
+Слышу все Твои мысли, то, что нам близко, всё кувырком
+Как проще сказать, не растерять, не разорвать
+Мы здесь на века, словно река, словно слова молитвы
+
+Всё, кроме любви, вся наша жизнь так далеко
+Я, я - не один, но без Тебя просто никто
+
+Пепел лёгок и светел, я не заметил, как время прошло
+Чары силу теряют и превращают жемчуг в стекло
+Как пусто в душе без миражей, без волшебства
+Мы здесь лишь на миг, пусть он звучит, словно слова молитвы
+
+Всё, кроме любви, вся наша жизнь так далеко
+Я, я - не один, но без Тебя просто никто
+
+Всё, кроме любви, вся наша жизнь так далеко
+Я, я - не один, но без Тебя просто никто
+Всё, кроме любви, вся наша жизнь так далеко`,
+
+    // ── Бурнашев Карим, Сысоев Всеволод, Пилипенко Леонид ──
+    7:  `Time, it needs time
+To win back your love again
+I will be there, I will be there
+Love, only love
+Can bring back your love someday
+I will be there, I will be there
+
+Fight, babe, I'll fight
+To win back your love again
+I will be there, I will be there
+Love, only love
+Can break down the wall someday
+I will be there, I will be there
+
+If we go again
+All the way from the start
+I will try to change
+Things that killed our love
+Your pride has built wall, so strong
+I can't get through
+Is there really no chance
+To start once again
+I'm loving you
+
+Try, baby try
+To trust in my love again
+I will be there, I will be there
+Love, our love
+Just shouldn not be thrown away
+I will be there, I will be there
+
+If we go again
+All the way from the start
+I will try to change
+Things that killed our love
+Yes, I've hurt your pride, I know
+What you've been through
+You should give me a chance
+This can't be the end
+
+I'm still loving you
+I'm still loving you
+I'm still loving you
+I'm still loving you
+I'm still loving you`,
+    8:  `Море обнимет, закопает в пески
+Закинут рыболовы лески
+Поймают в сети наши души
+Прости меня, моя любовь
+Поздно, о чём-то думать слишком поздно
+Тебе, я чую, нужен воздух
+Лежим в такой огромной луже
+Прости меня, моя любовь
+Джинсы воды набрали и прилипли
+Мне кажется, мы крепко влипли
+Мне кажется, потухло солнце
+Прости меня, моя любовь
+Тихо, не слышно ни часов, ни чаек
+Послушно сердце выключаем
+И ты в песке, как будто в бронзе
+Прости меня, моя любовь
+Прости меня, моя любовь
+Море обнимет, закопает в пески
+Море (море) обнимет, закопает в пески`,
+    9:  `Sometimes I feel
+Like I don't have a partner
+Sometimes I feel
+Like my only friend
+Is the city I live in
+The city of Angels
+Lonely as I am
+Together we cry
+
+I drive on her streets
+'Cause she's my companion
+I walk through her hills
+'Cause she knows who I am
+She sees my good detail
+And she kisses me windy
+I never worry
+Now that is a lie
+
+I don't ever want to feel
+Like I did that day
+Take me to the place I love
+Take me all the way
+I don't ever want to feel
+Like I did that day
+Take me to the place I love
+Take me all the way (yeah yeah)
+
+It's hard to believe
+That there's nobody out there
+It's hard to believe
+That I'm all alone
+At least I have her love
+The city she loves me
+Lonely as I am
+Together we cry
+
+I don't ever want to feel
+Like I did that day
+Take me to the place I love
+Take me all the way
+I don't ever want to feel
+Like I did that day`,
+    10: `Волею-неволей
+Бегаем по морю,
+Голыми пятками по небу.
+Стены, семафоры,
+Серые заборы –
+Все это мелочи, по фигу.
+
+Мокрым поцелуем
+Молнии рисуем
+И задыхаемся как в бреду.
+Грозы-хулиганы,
+Люди-тараканы –
+Нам это по фигу, по фигу.
+
+Сегодня
+И ты после фильма Кустурицы
+Шагаешь босиком по улице.
+И если никто не простудится,
+То всё пренепременно сбудется.
+
+И ты словно мокрая курица
+Шагаешь босиком по улице.
+И если никто не простудится,
+То всё пренепременно…
+
+Целую неделю
+Капают капели
+Прямо по темени, по фигу.
+Льёт, и тишина,
+Мы сошли с ума,
+Может быть.
+
+Мы курим сигареты
+Только этим летом
+Без остановки и на бегу.
+Хлопаем по лужам,
+Нам никто не нужен –
+Нам это по фигу, по фигу.
+
+Сегодня
+И ты после фильма Кустурицы
+Шагаешь босиком по улице.
+И если никто не простудится,
+То всё пренепременно сбудется.
+
+Сегодня
+И ты после фильма Кустурицы
+Шагаешь босиком по улице.
+И если никто не простудится,
+То всё пренепременно сбудется.`,
+
+    // ── Ганицев Тимофей ──
+    11: `
+Mama, take this badge off of me
+I can't use it anymore
+It's gettin' dark, too dark to see
+I feel like I'm knockin' on heaven's door
+
+Knock, knock, knockin' on heaven's door
+Knock, knock, knockin' on heaven's door
+Knock, knock, knockin' on heaven's door
+Knock, knock, knockin' on heaven's door
+
+Mama, put my guns in the ground
+I can't shoot them anymore
+That long black cloud is comin' down
+I feel like I'm knockin' on heaven's door
+
+Knock, knock, knockin' on heaven's door
+Knock, knock, knockin' on heaven's door
+Knock, knock, knockin' on heaven's door
+Knock, knock, knockin' on heaven's door`,
+    12: `Вот море молодых колышет супер-басы,
+Мне триста лет, я выполз из тьмы.
+Они торчат под рейв и чем-то пудрят носы,
+Они не такие, как мы.
+И я не горю желаньем лезть в чужой монастырь,
+Я видел эту жизнь без прикрас...
+
+Не стоит прогибаться под изменчивый мир,
+Пусть лучше он прогнется под нас,
+Однажды он прогнется под нас.
+
+Один мой друг, он стоил двух, он ждать не привык,
+Был каждый день последним из дней.
+Он пробовал на прочность этот мир каждый миг -
+Мир оказался прочней.
+Ну что же, спи спокойно, позабытый кумир,
+Ты брал свои вершины не раз...
+
+Не стоит прогибаться под изменчивый мир,
+Пусть лучше он прогнется под нас,
+Однажды он прогнется под нас.
+
+Другой держался русла и теченье ловил
+Подальше от крутых берегов.
+Он был как все и плыл как все, и вот он приплыл -
+Ни дома, ни друзей, ни врагов.
+И жизнь его похожа на фруктовый кефир,
+Видал я и такое не раз...
+
+Не стоит прогибаться под изменчивый мир,
+Пусть лучше он прогнется под нас,
+Однажды он прогнется под нас.
+
+Пусть старая джинса давно затерта до дыр,
+Пускай хрипит раздолбанный бас...
+
+Не стоит прогибаться под изменчивый мир,
+Пусть лучше он прогнется под нас,
+Однажды он прогнется под нас,
+Однажды он прогнется под нас,
+Однажды он прогнется под нас.`,
+    13: `A heart that's full up like a landfill
+A job that slowly kills you
+Bruises that won't heal
+You look so tired, unhappy
+Bring down the government
+They don't, they don't speak for us
+I'خد take a quiet life
+A handshake of carbon monoxide
+With no alarms and no surprises
+No alarms and no surprises
+No alarms and no surprises
+Silent, silent
+This is my final fit, my final bellyache
+With no alarms and no surprises
+No alarms and no surprises
+No alarms and no surprises
+Please
+Such a pretty house and such a pretty garden
+No alarms and no surprises
+No alarms and no surprises
+No alarms and no surprises
+Please`,
+    14: `Коронована луной,
+Как начало — высока,
+Как победа — не со мной,
+Как надежда — нелегка.
+За окном стеной метель,
+Жизнь по горло занесло,
+Сорвало финал с петель,
+Да поело всё тепло.
 Припев:
-Сквозь меня
-Шумят ветра
-Я б упал
-Да некуда
-
-Куплет 2
-Дождь и балкон 
-Кофе и халат 
-Сверху чей-то стон
-Снизу русский мат
-Звонил соседям
-Соседи молчат
-Затихли на время 
-Чтобы снова начать
-
-Бридж (2 раза)
-боялся людей 
-не одиночества 
-В прятках сильней 
-Был кого хочешь я
-Теперь боюсь
-Пустой квартиры
-Я так боюсь 
-Своего мира
-
-Припев (2 раза)
-Сквозь меня
-Шумят ветра
-Я б упал
-Да некуда
-`
-            },
-
-            // ===== САВВАТЕЕВ МИХАИЛ =====
-            {
-                id: 35,
-                artist: "Савватеев Михаил",
-                title: "Марш Небесных Связистов",
-                author: "Олег Медведев",
-                lyrics: `Время идет - не видать пока
-На траверзе нашей эры
-Лучше занятья для мужика,
-Чем ждать и крутить верньеры.
-Ведь нам без связи - ни вверх, ни вниз,
-Словно воздушным змеям.
-Выше нас не пускает жизнь,
-А ниже - мы не умеем.
-
-В трюмах голов, как золото инков,
-Тлеет мечта, дрожит паутинка.
-Прямо - хана, налево - сума, направо - тюрьма,
-А здесь - перекрестье. В нем - или-или,
-И шхуна уходит из Гуаякиля.
-Не удивляйся - именно так и сходят с ума.
-
-Плохо, коли на связи обрыв.
-Тускло на дне колодца.
-Но встать и выползти из норы -
-Что еще остается?
-Там, у поваленного столба,
-Скорчиться неказисто.
-И если медь запоет в зубах -
-То значит небо зовет связиста.
-
-Вспомни, как было: дуло сквозь рамы
-В мерзлую глушь собачьего храма.
-Иней с латуни, пепел с руки - казенный листок.
-Вспомни, как вдруг искрящимся жалом
-По позвоночнику пробежала
-Самая звонкая, самая звездная из частот.
-
-Дышит в затылок чугунный мир,
-Шепчет тебе: "Останься!"
-Но ты выходишь, чтоб там - за дверьми -
-Ждать своего сеанса.
-Чтоб этому миру в глаза швырнув
-Пеплом своих пристанищ,
-Крикнуть ему: "Я поймал волну!
-Теперь хрен ты меня достанешь!"
-
-Бризы Атлантики целовали
-Руки, горящие на штурвале.
-Под Антуаном - синее море и облака.
-Вдаль, над плечом - не встречен, не найден -
-В небе летит пылающий Лайтинг,
-Краткий сигнал, последний привет на всех языках.
-
-Выпадет шанс - и некто святой
-Придет спасать твою душу.
-Ты встанешь, схватишь его за грудки
-И будешь трясти как грушу,
-Ты скажешь: "Мне не надо спасительных слов.
-Их своих у меня - как грязи.
-Мне не надо ни стен, ни гвоздей, ни холстов,
-Слышишь - дай мне канал связи!"
-
-Первые звуки, пробные строки,
-Сладкие муки тонкой настройки.
-Кокон в пространстве - сам себе волк, товарищ и князь,
-Каменный пес, персона "нон грата",
-Вечный дежурный у аппарата
-Ждет, когда небо вспомнит о нем и выйдет на связь...
-
-Что-то мимо нас, мимо нас, мимо нас по касательной, по боку.
-Ты не прячься, небо, не уходи, или уж отпусти совсем!
-Робкая снежинка забывающих глаз, прокуси мое облако.
-Ты не сердись на меня - это я так, пошутил, не сердись...`
-            },
-            {
-                id: 36,
-                artist: "Савватеев Михаил",
-                title: "Марафонец",
-                author: "Смешарики",
-                lyrics: `Я пробегаю по доро-о-о-оге,
-Я задираю кверху но-о-о-оги,
-Поберегитесь, недотро-о-о-оги —
-Бежит отчаянный атлет!
-Не остаётся без внима-а-а-ания
-Моё лихое пробега-а-а-ание
-И регулируя дыха-а-а-ание
-Я посылаю всем привет!
-
-Как хорошо придумал кто-о-о-о-то,
-Что если думать неохо-о-о-ота,
-И опостылела рабо-о-о-ота,
-И в голове — сплошной кишмиш,
-Ты можешь ноги задира-а-а-ая,
-И на приличье не взира-а-а-ая,
-Бежать вперёд, не разбира-а-а-ая,
-Куда ты, собственно, бежишь?
-
-И дело тут не в результа-а-а-ате,
-Призы и прочее — некста-а-а-ати,
-Их можно вешать у крова-а-а-ати,
-Или пожертвовать в музей
-Куда дороже ощуще-е-е-ение,
-Упругой мышцы сокраще-е-е-ение,
-Ну и, конечно, восхище-е-е-ение
-Коллег, знакомых и друзей
-
-Мудрые боги выдумали но-оги,
-Мудрые боги выдумали но-оги`
-            },
-            {
-                id: 37,
-                artist: "Савватеев Михаил",
-                title: "Белое Безмолвие",
-                author: "Высоцкий",
-                lyrics: `Все года и века и эпохи подряд
-Всё стремится к теплу от морозов и вьюг.
-Почему ж эти птицы на север летят,
-Если птицам положено только на юг?
-
-Слава им не нужна и величие.
-Вот под крыльями кончится лёд,
-И найдут они счастье птичее,
-Как награду за дерзкий полёт.
-
-Что же нам не жилось, что же нам не спалось?
-Что нас выгнало в путь по высокой волне?
-Нам сиянья пока наблюдать не пришлось.
-Это редко бывает — сиянья в цене!
-
-Тишина. Только чайки — как молнии.
-Пустотой мы их кормим из рук.
-Но наградою нам за безмолвие
-Обязательно будет звук.
-
-Как давно снятся нам только белые сны,
-Все иные оттенки снега замели.
-Мы ослепли давно от такой белизны,
-Но прозреем от чёрной полоски земли.
-
-Наше горло отпустит молчание,
-Наша слабость растает, как тень.
-И наградой за ночи отчаянья
-Будет вечный полярный день.
-
-Север, воля, надежда, — страна без границ,
-Снег без грязи, как долгая жизнь без вранья.
-Вороньё нам не выклюет глаз из глазниц,
-Потому что не водится здесь воронья.
-
-Кто не верил в дурные пророчества,
-В снег не лёг ни на миг отдохнуть,
-Тем наградою за одиночество
-Должен встретиться кто-нибудь.`
-            },
-            {
-                id: 38,
-                artist: "Савватеев Михаил",
-                title: "Стеклянный Господин",
-                author: "Никитины",
-                lyrics: `Жил-был одинокий господин.
-Был он очень странный,
-Тем, что был стеклянный.
-Динь… Динь… Динь…
-Он в звон,
-Как в доспехи, был одет.
-Счастлив или мрачен,
-Был он весь прозрачен –
-Был поэт.
-
-«Он - трус!» -
-Так над ним смеялась шваль,
-Но просто жаль об эту шваль
-Разбить хрусталь, хрусталь.
-Матюгами,
-Утюгами
-И смазными сапогами
-Все швыряли
-И орали,
-И раздался вдруг печальный
-Хруст серебряный, прощальный,
-Умирающий, хрустальный
-Хруст, хруст, хруст.
-
-Тот, кто с хрустальной душой,
-Тот наказан расплатой большой.
-Остаются лишь крошки стекла –
-Жизнь прошла.
-Нет, есть другой ответ:
-Будет много лет
-Жить душа хрустальная…
-Шепчет хрустальная даль,
-Подпевает разбитый хрусталь,
-Повторяет звенящая синь:
-Динь… Динь… Динь…
-
-Где тот
-Одинокий господин?
-В гробе деревянном,
-Вовсе не стеклянном,
-Он один.
-Он звон
-Спрятал там, где нет ни зги.
-Лучше быть убитым, чем людьми разбитым
-Вдребезги.
-
-«Он - трус!» -
-Так над ним смеялась шваль,
-Но просто жаль об эту шваль
-Разбить хрусталь, хрусталь.
-Матюгами,
-Утюгами
-И смазными сапогами
-Все швыряли
-И орали,
-И раздался вдруг печальный
-Хруст серебряный, прощальный,
-Умирающий, хрустальный
-Хруст, хруст, хруст.
-
-Тот, кто с хрустальной душой,
-Тот наказан расплатой большой.
-Остаются лишь крошки стекла –
-Жизнь прошла.
-Нет, есть другой ответ:
-Будет много лет
-Жить душа хрустальная…
-Шепчет хрустальная даль,
-Подпевает разбитый хрусталь,
-Повторяет звенящая синь:
-Динь… Динь… Динь…`
-            },
-
-            // ===== АЛАН Б =====
-            {
-                id: 39,
-                artist: "Алан Б",
-                title: "Свои песни",
-                author: "авторские",
-                lyrics: `-`
-            },
-
-            // ===== ПОМИНОВ ДЕНИС =====
-            {
-                id: 40,
-                artist: "Поминов Денис",
-                title: "92",
-                author: "Стрыкало",
-                lyrics: `Бабушка думает, я умру,
-Если стану водиться с вами,
-Приходить постоянно странным
-К утру. Труп.
-
-Мы поедем в другой район,
-Встретим Сашу, поймём, что Саша
-Наркотически объебашен
-И груб, груб, груб.
-
+Играй, как можешь, сыграй,
+Закрой глаза и вернись.
+Не пропади, но растай,
+Да колее поклонись.
+Мое окно отогрей,
+Пусти по полю весной.
+Не доживи, но созрей,
+Ты будешь вечно со мной.
+Ты будешь вечно со мной...
+Ты будешь вечно со мной...
+Со мной...
+Ищут землю фонари,
+К небу тянется свеча,
+На снегу следы зари —
+Крылья павшего луча.
+Что же, вьюга, наливай,
+Выпьем время натощак.
+Я спою, ты в такт пролай
+О затерянных вещах.
 Припев:
-Мы вернёмся домой,
-Будем молча смотреть,
-Как кончается день,
-Как срывается дождь.
-Что у тебя в душе?
-Ты никуда уже
-Не уйдёшь.
+Играй, как можешь, сыграй,
+Закрой глаза и вернись.
+Не пропади, но растай,
+Да колее поклонись.
+Мое окно отогрей,
+Пусти по полю весной.
+Не доживи, но созрей,
+Ты будешь вечно со мной.
+Осторожно, не спеша,
+С белым ветром на груди,
+Где у вмёрзшей в лёд ладьи
+Ждёт озябшая душа`,
 
-Ты не любишь моих звонков,
-Их я думаю бросить делать.
-Хотя, хотя бы раз в неделю
-Готов.
+    // ── Гимранов Равиль, Горохов Артем ──
+    15: `Большие города,
+Пустые поезда,
+Ни берега, ни дна,
+Всё начинать сначала.
+Холодная война,
+И время как вода,
+Он не сошёл с ума,
+Ты ничего не знала.
 
-Буря времени сносит всё,
-Мы дрейфуем на разных льдинах.
-Как-то встретились в магазине
-И всё, всё, всё.
+Полковнику никто не пишет,
+Полковника никто не ждёт.
 
-Припев:
-Ты забыла давно
-Самый солнечный год
-Девяносто второй.
-Ну чего же ты ждёшь?
-Что у тебя в душе?
-Ты никогда уже
-Не поймёшь.
+На линии огня
+Пустые города,
+В которых никогда
+Ты раньше не бывала.
+И рвутся поезда
+На тонкие слова,
+Идёт большая игра,
+Она уже не та.
 
-Что у тебя в душе?
-Ты ничего уже
-Не вернёшь.
+Полковнику никто не пишет,
+Полковника никто не ждёт.
+Полковнику никто не пишет,
+Полковника никто не ждёт.
 
-От тебя никаких вестей
-Дни, недели, десятилетия.
-Никому неизвестно, где
-Ты теперь.
+Большие города,
+Пустые поезда,
+Ни берега, ни дна,
+Всё начинать сначала.
+Холодная война,
+И время как вода,
+Он не сошёл с ума,
+Ты ничего не знала.
 
-«Лох» написано на стене,
-Осень сыплет на лужи листья.
-Здесь темнеет быстро
-И никого нет, нет, нет.
+Полковнику никто не пишет,
+Полковника никто не ждёт.
+Полковнику никто не пишет,
+Полковника никто не ждёт.`,
+    16: `Перемен — Вместо тепла — зелень стекла,
+Вместо огня — дым.
+Из сетки календаря выхвачен день.
+Красное солнце сгорает дотла,
+День догорает с ним,
+На пылающий город падает тень.
 
-Припев:
-Я пройду через двор,
-Через редкие сны
-В девяносто второй,
-Где ты всё ещё ждёшь.
-Что у тебя в душе?
-Ты никуда уже
-Не уйдёшь.
+Перемен! — требуют наши сердца.
+Перемен! — требуют наши глаза.
+В нашем смехе и в наших слезах,
+И в пульсации вен:
+«Перемен! — мы ждем перемен!»
 
-Что у тебя в душе?
-Ты ничего уже
-Не вернёшь.`
-            },
-            {
-                id: 41,
-                artist: "Поминов Денис",
-                title: "Улыбнись",
-                author: "Cupsize",
-                lyrics: `Девчонка плачет в углу, пока люди танцуют, так мило
-Смотреть на это насилие, смотреть на это насилие
-Разорваны сухожилия (Разорваны сухожилия)
-У трёх ребят, что не смогли найти друг с другом компромисс
-Между людьми эта химия
-На них одежда, что меняет цвет под ритм музыки, крутись
-Не надо плакать, ты сильная
-Весь этот мир сегодня у твоих ног
-Так что просто улыбнись (Просто улыбнись)
+Электрический свет продолжает наш день,
+И коробка от спичек пуста,
+Но на кухне синий цветок горит.
+Сигареты в руках, чай на столе, — эта схема проста,
+И больше нет ничего, всё находится в нас.
 
-Просто улыбнись, просто улыбнись
-Просто улыбнись, просто улыбнись
+Перемен! — требуют наши сердца.
+Перемен! — требуют наши глаза.
+В нашем смехе и в наших слезах,
+И в пульсации вен:
+«Перемен! — мы ждем перемен!»
 
-Снизу дежурит полиция
-Им нужно срочно прекратить всё это
-И дать ребятам чуть-чуть остыть (Чуть-чуть остыть)
-Следующая композиция будет специально для тебя
-Ведь это заставит тебя перестать грустить
-Заставит тебя перестать грустить
-Заставит тебя перестать грустить
-Заставит тебя перестать грустить
-Ты знаешь, как нам перестать грустить
+Мы не можем похвастаться мудростью глаз
+И умелыми жестами рук,
+Нам не нужно всё это, чтобы друг друга понять.
+Сигареты в руках, чай на столе — так замыкается круг,
+И вдруг нам становится страшно что-то менять.
 
-Просто улыбнись, просто улыбнись
-Просто улыбнись, просто улыбнись
-Просто улыбнись`
-            },
-            {
-                id: 42,
-                artist: "Поминов Денис",
-                title: "Что-то авторское",
-                author: "авторское",
-                lyrics: `-`
-            },
+Перемен! — требуют наши сердца.
+Перемен! — требуют наши глаза.
+В нашем смехе и в наших слезах,
+И в пульсации вен:
+«Перемен! — мы ждем перемен!»`,
+    17: `Тёмный, мрачный коридор,
+Я на цыпочках, как вор,
+Пробираюсь, чуть дыша,
+Чтобы не спугнуть
+Тех, кто спит уже давно,
+Тех, кому не всё равно,
+В чью я комнату тайком
+Желаю заглянуть,
+Чтобы увидеть…
 
-            // ===== ОПРЕДЕЛЁННО МОЖЕТ БЫТЬ =====
-            {
-                id: 43,
-                artist: "Определённо может быть",
-                title: "Автовокзалы",
-                author: "авторская",
-                lyrics: `Звон ночных автовокзалов
-Резонирует в душе.
-Переезд и всё сначала -
-Мыслям тесно в багаже.
+Как бессонница в час ночной
+Меняет, нелюдимая, облик твой,
+Чьих невольница ты идей?
+Зачем тебе охотиться на людей?
 
-Солнце утром мчит навстречу,
-Восстает из темноты,
-И в огне блестят, как жемчуг,
-Разведенные мосты.
+Крестик на моей груди,
+На него ты погляди,
+Что в тебе способен он
+Резко изменить?
+Много книжек я читал,
+Много фокусов видал,
+Свою тайну от меня
+Не пытайся скрыть!
+Я это видел!
 
-Припев:
-Все сомненья позади,
-Я переверну страницу,
-Я переверну страницу.
-Что-то будет впереди!
-Уже не остановиться!
-Уже не остановиться!
-Уже не остановиться!
-Уже не остановиться!
-Уже не остановиться!
+Как бессонница в час ночной
+Меняет, нелюдимая, облик твой,
+Чьих невольница ты идей?
+Зачем тебе охотиться на людей?
 
-Столько нового повсюду
-Возникает на пути,
-Но мой якорь почему-то
-Не может свой покой найти.
+Очень жаль, что ты тогда
+Мне поверить не смогла
+В то, что новый твой приятель —
+Не такой, как все!
+Ты осталась с ним вдвоём,
+Не зная ничего о нём,
+Что для всех опасен он —
+Наплевать тебе!
+И ты попала…
 
-Чужие гавани встречают
-Глазами, полными тоски,
-В них такие же печали,
-Те же замки и пески.
+К настоящему колдуну,
+Он загубил таких, как ты, не одну!
+Теперь он может управлять тобой,
+Всё происходит, как в страшном сне,
+И находиться здесь опасно мне!`,
+    18: `Ночь коротка, цель далека,
+Ночью так часто хочется пить.
+Ты выходишь на кухню, но вода здесь горька,
+Ты не можешь здесь спать, ты можешь здесь жить.
 
-Припев:
-Все сомненья позади,
-Я переверну страницу,
-Я переверну страницу.
-Что-то будет впереди!
-Уже не остановиться!
-Уже не остановиться!
-Уже не остановиться!
-Уже не остановиться!
-Уже не остановиться!
+Доброе утро, последний герой!
+Доброе утро тебе и таким, как ты.
+Доброе утро, последний герой!
+Доброе утро тебе и таким, как ты.
 
-Что самолёт, что корабль, что поезд -
-Мне всё равно, лишь бы только вперёд.
-Я бегу от себя, кто-то дышит мне в пояс,
-Вдруг спотыкается и отстаёт.
+Ты хотел быть один — это быстро прошло,
+Ты хотел быть один, но не смог быть один.
+Твоя ноша легка, но немеет рука,
+И ты встречаешь рассвет за игрой в «дурака».
 
-Я обернусь и спрошу что-то странное,
-Едва только встретившись взглядом с собой:
-"Что же в железной дороге главное?"
-То, что по ней ты вернёшься домой!
+Доброе утро, последний герой!
+Доброе утро тебе и таким, как ты.
+Доброе утро, последний герой!
+Доброе утро тебе и таким, как ты.
 
-Припев:
-Все сомненья позади,
-Я переверну страницу,
-Я переверну страницу.
-Что-то будет впереди!
-Уже не остановиться!
-Уже не остановиться!
-Уже не остановиться!
-Уже не остановиться!
-Уже не остановиться!`
-            },
-            {
-                id: 56,
-                artist: "Определённо может быть",
-                title: "Звезды в зените",
-                author: "авторская",
-                lyrics: `Услышь меня, вселенная, мою радиоволну.
-Взлёт, затем падение, опять иду ко дну.
-Бетоном скован, стенами, и в них я утону.
-Есть шансы на спасение, услышь меня, прошу.
+Телефонный звонок, как команда: «В ружьё!»
+Твой дом — сумасшедший дом,
+Ты идешь на вокзал, тебя ждут у дверей,
+Но ты знаешь, что здесь не помогут тебе.
 
-Моя жизнь в тени звёзд их ненастоящего света.
-Ночи надежд и дни грёз летят несгоревшей кометой.
-Дай мне маленький ломтик твоего июльского неба.
-Я взращу в себе смелость, найду храбрость и для побега.
-Я рискну сиять ещё ярче, сбежать туда, где я не был.
-Дай мне маленький зонтик скрыться от метеоритного гнева.
+Доброе утро, последний герой!
+Доброе утро тебе и таким, как ты.
+Доброе утро, последний герой!
+Доброе утро тебе и таким, как ты.`,
 
-В комнатах тёмных беззвёздных закрылись — и свет погас изнутри.
-Но если прятаться значит исчезнуть совсем, мы не смогли через это пройти.
-Ещё один шанс.
+    // ── Еникеев Арнольд ── (в анкете только ссылки на тексты)
+    19: `If we start cracking at the center, I won't let it break
+Hold it together through the weather, it's my DNA
+So sick of being your giver, throwing my soul away
+A-a-a-all give, no-no-no-no take
 
-Нет случайных событий.
-Звёзды кричат, что у нас ничего с тобою не выйдет.
-Но нам плевать, какие звёзды в зените.
-Мы и сами как звёзды — взгляните.
-И наш свет никогда не погаснет.
-И скорее солнце остынет.
-А созвездия в небе, в небе, где нас нет, навсегда остаются пустыми.
+Look what you started
+You're turning me heartless
+I'm trying my hardest
+If I'm being honest
 
-Ты любишь твердить «виноватые звёзды».
-Решили, что нам двоим быть счастливыми поздно.
-Мне бы снова дышать тобой, ловить каждый твой возглас.
-Кислородный баллон пустой, у нас скоро кончится воздух.
-Вдохни в меня новую жизнь, мой пульс для тебя только создан.
-Просто нам надо вместе быть, даже если это не просто.
+I can't take it over and over
+Dead weight hanging off of my shoulder
+Nothing changes, I'm getting colder
+Dead weight hanging off of my shoulders
 
-Каждый искусственный день мы наполним теплом живым.
-Из одинаковых снов сложим путь к тем же дням, но местам другим, когда-то родным.
-Ещё один шанс.
+Dead weight hanging off of my shoulders
 
-Нет случайных событий.
-Звёзды кричат, что у нас ничего с тобою не выйдет.
-Но нам плевать, какие звёзды в зените.
-Мы и сами как звёзды — взгляните.
-И наш свет никогда не погаснет.
-И скорее солнце остынет.
-А созвездия в небе, в небе, где нас нет, навсегда остаются пустыми.
+If I start cracking at the center, all this goes away
+I'm staying numb to my feelings, dodge 'em like novocaine
+My back is breaking from taking all of this dead weight
+A-a-a-all give, no-no-no-no take
 
-Вдохни в меня новую жизнь.
-Просто нам надо вместе быть.
-И наш свет никогда не погаснет.
-И скорее солнце остынет.
-А созвездия в небе, в небе, где нас нет, навсегда остаются пустыми.
+Do you even notice
+How easy you got this?
+Taking wings off a goddess
+If I'm being honest
 
-Нам плевать, какие звёзды в зените.
-Нам плевать, какие звёзды в зените.
-Нам плевать, какие звёзды в зените.
-Мы и сами как звёзды — взгляните.
-Нам плевать, какие звёзды в зените.
-Нам плевать, какие звёзды в зените.
-Нам плевать, какие звёзды в зените.
-Мы и сами как, мы и сами как...
+I can't take it over and over
+Dead weight hanging off of my shoulder
+Nothing changes, I'm getting colder
+Dead weight hanging off of my shoulders
 
-Услышь меня, Вселенная, мою радиоволну.
-Взлёт, затем падение, опять иду ко дну.
-Бетоном скован, стенами, и в них я утону.
-Есть шансы на спасение, услышь меня, прошу.
+Dead weight hanging off of my shoulders
 
-Моя жизнь в тени звёзд их ненастоящего света.
-Ночи надежд и дни грёз летят несгоревшей кометой.
-Дай мне маленький ломтик твоего июльского неба.
-Я взращу в себе смелость, найду храбрость и для побега.
-Я рискну сиять ещё ярче, сбежать туда, где я не был.
-Дай мне маленький зонтик скрыться от метеоритного гнева.
+A-a-a-all give, no-no-no-no take
+A-a-a-all give, no-no-no-no take
+A-a-a-all give, no-no-no-no take
+A-a-a-all give, no-no-no-no take
 
-В комнатах тёмных беззвёздных закрылись — и свет погас изнутри.
-Но если прятаться значит исчезнуть совсем, мы не смогли через это пройти.
-Ещё один шанс.
+I can't take it over and over
+Dead weight hanging off of my shoulder
+Nothing changes, I'm getting colder
+Dead weight hanging off of my shoulders
+I can't take it over and over
+Dead weight hanging off of my shoulder
+Nothing changes, I'm getting colder
+Dead weight hanging off of my shoulders`,
+    20: `То ли рядом с шофером, то ли в тесном купе —
+Я мотаюсь по жизни по великой стране.
+Позади километры оборванных струн,
+Впереди — миражи неопознанных лун.
 
-Нет случайных событий.
-Звёзды кричат, что у нас ничего с тобою не выйдет.
-Но нам плевать, какие звёзды в зените.
-Мы и сами как звёзды — взгляните.
-И наш свет никогда не погаснет.
-И скорее солнце остынет.
-А созвездия в небе, в небе, где нас нет, навсегда остаются пустыми.
+Еду, еду, еду, еду я,
+Реки, степи, горы и поля...
+Видел я вчера в твоих глазах
+Шар воздушный — глобус в небесах...
 
-Ты любишь твердить «виноватые звёзды».
-Решили, что нам двоим быть счастливыми поздно.
-Мне бы снова дышать тобой, ловить каждый твой возглас.
-Кислородный баллон пустой, у нас скоро кончится воздух.
-Вдохни в меня новую жизнь, мой пульс для тебя только создан.
-Просто нам надо вместе быть, даже если это не просто.
+Посиделки с друзьями, мимолетный роман...
+Не выбрасывай, мама, мой чемодан:
+Посижу я немного и снова пойду —
+Видно, что-то ищу и никак не найду...
 
-Каждый искусственный день мы наполним теплом живым.
-Из одинаковых снов сложим путь к тем же дням, но местам другим, когда-то родным.
-Ещё один шанс.
+Еду, еду, еду, еду я,
+Реки, степи, горы и поля...
+Шар воздушный мне подскажет путь,
+Я к тебе приду когда-нибудь...
 
-Нет случайных событий.
-Звёзды кричат, что у нас ничего с тобою не выйдет.
-Но нам плевать, какие звёзды в зените.
-Мы и сами как звёзды — взгляните.
-И наш свет никогда не погаснет.
-И скорее солнце остынет.
-А созвездия в небе, в небе, где нас нет, навсегда остаются пустыми.
+Наплевать на погоду, коль исправен мотор.
+Оглянуться назад — подписать приговор...
+На твоих золотых время не истекло,
+И я пялюсь сквозь ночь в лобовое стекло.
 
-Вдохни в меня новую жизнь.
-Просто нам надо вместе быть.
-И наш свет никогда не погаснет.
-И скорее солнце остынет.
-А созвездия в небе, в небе, где нас нет, навсегда остаются пустыми.
+Еду, еду, еду, еду я,
+Реки, степи, горы и поля...
+Дай мне на дорогу сигарет,
+Чтобы сочинить еще куплет.
 
-Нам плевать, какие звёзды в зените.
-Нам плевать, какие звёзды в зените.
-Нам плевать, какие звёзды в зените.
-Мы и сами как звёзды — взгляните.
-Нам плевать, какие звёзды в зените.
-Нам плевать, какие звёзды в зените.
-Нам плевать, какие звёзды в зените.
-Мы и сами как, мы и сами как...`
-            },
-            {
-                id: 55,
-                artist: "Определённо может быть",
-                title: "До утра",
-                author: "авторская",
-                lyrics: `Говорят, одна ночь ничего не изменит,
-Кроме чисел календаря.
-По их лицам гуляют тени сомнений,
-Мне в окне улыбнулась заря.
+Еду, еду, еду, еду я,
+Реки, степи, горы и поля...
+Звезды в небе мне подскажут путь,
+Я к тебе приду когда-нибудь...`,
+    21: `Завтра будет скучно и смешно
+Это не больно
+Просто вчера был день
+Завтра будет вечно и грешно
+Это не важно
+Важен лишь цвет травы
+Соль насыпана на ладонь
+Она
+Рассыпана на ладони
+Мышеловка захлопнулась`,
 
-Лектор скажет с экрана, что я бездельник,
-Но даст шанс мне опять и опять.
-Он заботать предмет нам свой доверил,
-Мне бы доверие не потерять.
+    // ── Завадский Дмитрий ──
+    22: `-`,
+    23: `-`,
+    24: `-`,
+    25: `-`,
+    26: `-`,
 
-Эта ночь будет долгой самой,
-Эта ночь — борьба со сном.
-Я не знаю полпрограммы,
-И начать пришлось с основ.
-Я молюсь сейчас вместе с мамой,
-Лишь бы в этот раз пронесло.
-Я уверен — всё кончится драмой,
+    // ── Калюжный Александр ──
+    27: `I used to rule the world
+Seas would rise when I gave the word
+Now in the mornin', I sleep alone
+Sweep the streets I used to own
+
+I used to roll the dice
+Feel the fear in my enemy's eyes
+Listen as the crowd would sing
+"Now the old king is dead, long live the king"
+One minute, I held the key
+Next, the walls were closed on me
+And I discovered that my castles stand
+Upon pillars of salt and pillars of sand
+
+I hear Jerusalem bells a-ringin'
+Roman cavalry choirs are singin'
+Be my mirror, my sword and shield
+My missionaries in a foreign field
+For some reason, I can't explain
+Once you'd gone, there was never
+Never an honest word
+And that was when I ruled the world
+
+It was a wicked and wild wind
+Blew down the doors to let me in
+Shattered windows and the sound of drums
+People couldn't believe what I'd become
+And revolutionaries wait
+For my head on a silver plate
+Just a puppet on a lonely string (Mm, mm)
+Aw, who would ever wanna be king?
+
+I hear Jerusalem bells a-ringin'
+Roman cavalry choirs are singin'
+Be my mirror, my sword and shield
+My missionaries in a foreign field
+For some reason, I can't explain
+I know Saint Peter won't call my name
+Never an honest word
+But that was when I ruled the world
+
+Oh-oh-oh, oh-oh, oh
+Oh-oh-oh, oh-oh, oh
+Oh-oh-oh, oh-oh, oh
+Oh-oh-oh, oh-oh, oh
+
+(Oh-oh-oh, oh-oh, oh)
+Hear Jerusalem bells a-ringin'
+(Oh-oh-oh, oh-oh, oh)
+Roman cavalry choirs are singin'
+(Oh-oh-oh, oh-oh, oh)
+Be my mirror, my sword and shield
+(Oh-oh-oh, oh-oh, oh)
+My missionaries in a foreign field
+(Oh-oh-oh, oh-oh, oh)
+For some reason, I can't explain
+(Oh-oh-oh, oh-oh, oh)
+I know Saint Peter won't call my name
+Never an honest word
+But that was when I ruled the world
+
+Mm, mm, mm, mm
+Mm, mm, mm, mm
+Mm, mm`,
+    28: `Another Friday night, I'm somewhere
+A little drunk and worn out from the show
+It's a hallway to a hotel room
+The truck's already rollin' down the road
+I find the lights, take off my coat
+I see her there, just lyin' on the bed
+She's seen me through my yesterdays
+God knows, tonight, I'm needin' her again
+
+She's the place I go
+When there's nowhere left to run to
+She's the one I hold
+When there's no one to hold on to
+She's been with me late at night when I was drownin' in the dark
+She heard my every word when I was pourin' out my heart
+So I thank my lucky stars
+For every crack, scratch, and scar on this guitar
+
+She's given me her best when I am at my worst
+When I can't find the pieces, fingers scratchin' in the dirt
+And she offers no forgiveness 'cause she likes to make it hurt
+
+She's the place I go
+When there's nowhere left to run to
+She's the one I hold
+When there's no one to hold on to
+She's been with me late at night when I was drownin' in the dark
+And she heard my every word when I was pourin' out my heart
+So I thank my lucky stars
+For every crack, scratch, and scar on this guitar
+
+Mornin' like a freight train
+Last night still ringin' in my head
+Before today becomes tomorrow
+Tonight, I know I'll do it all again
+
+She's the place I go
+When there's nowhere left to run to
+She's the one I hold
+When there's no one to hold on to
+She's been with me late at night when I was drownin' in the dark
+And she heard my every word when I was pourin' out my heart
+So I thank my lucky stars
+For every crack, scratch, and scar on this guitar
+
+And so I thank my lucky stars
+For every crack, scratch, and scar on this guitar`,
+    29: `Ваше благородие, госпожа разлука,
+Мы с тобой родня давно, вот какая штука.
+Письмецо в конверте, погоди, не рви…
+Не везёт мне в смерти, повезёт в любви!
+Ваше благородие, госпожа удача,
+Для кого ты добрая, а кому — иначе.
+Девять граммов в сердце — постой, не зови…
+Не везёт мне в смерти, повезёт в любви!
+Ваше благородие, госпожа чужбина,
+Жарко обнимала ты, да только не любила.
+И в саду зелёном у меня в крови… [вариант / распев]
+Не везёт мне в смерти, повезёт в любви!
+Ваше благородие, госпожа победа,
+Значит, моя песенка до конца не спета.
+Перестаньте, черти, да клясться на крови…
+Не везёт мне в смерти, повезёт в любви!`,
+    30: `Я устал от чужих городов,
+Я устал колоть этот лед.
+Я хотел бы уснуть,
+Но нет времени спать.
+И опять за окнами ночь,
+И опять где-то ждут меня,
+И опять я готов идти.
+Опять.
+
+Но я верю, что ты
+Снова скажешь эти несколько слов,
+И тогда я готов
+Оставить след на этом снегу.
+И я знаю, что мне
+Недолго осталось ждать.
+Чтобы снова увидеть
+Сосны на морском берегу.
+
+Переулки молчат,
+Под ногами - усталый асфальт,
+Но под крышами город
+Продолжает жить,
+И пускай фонари
+Светят ярче далеких звезд -
+Фонари все погаснут, а звезды
+Будут светить.
+
+Но я верю, что ты
+Снова скажешь эти несколько слов,
+И тогда я готов
+Оставить след на этом снегу.
+И я знаю, что мне
+Недолго осталось ждать.
+Чтобы снова увидеть
+Сосны на морском берегу.`,
+
+    // ── Куприянова Софья ──
+    31: `Smoking cigarettes on the roof
+You look so pretty and I love this view
+
+We fell in love in October
+That's why, I love fall
+Looking at the stars
+Admiring from afar
+
+My girl, my girl, my girl
+You will be my girl
+My girl, my girl, my girl
+You will be my world
+My world, my world, my world
+You will be my girl
+My world, my world, my world
+You will be my girl
+
+Smoking cigarettes on the roof
+You look so pretty and I love this view
+Don't bother looking down
+We're not going that way
+At least I know, I am here to stay
+
+We fell in love in October
+That's why, I love fall
+Looking at the stars
+Admiring from afar
+
+My girl, my girl, my girl
+You will be my girl
+My girl, my girl, my girl
+You will be my world
+My world, my world, my world
+You will be my girl
+My world, my world, my world
+You will be my girl`,
+    32: `And all I am is a man
+I want the world in my hands
+I hate the beach but I stand
+In California with my toes in the sand
+Use the sleeves of my sweater
+Let's have an adventure
+Head in the clouds but my gravity's centered
+Touch my neck and I'll touch yours
+You in those little high waisted shorts, oh
+
+She knows what I think about
+And what I think about
+One love, two mouths
+One love, one house
+No shirt, no blouse
+Just us, you find out
+Nothing that I wouldn't wanna tell you about, no
+
+'Cause it's too cold for you here
+And now, so let me hold
+Both your hands in the holes of my sweater
+
+And if I may just take your breath away
+I don't mind if there's not much to say
+Sometimes the silence guides a mind
+To move to a place so far away
+The goosebumps start to raise
+The minute that my left hand meets your waist
+And then I watch your face
+Put my finger on your tongue
+'Cause you love the taste, yeah
+These hearts adore
+Everyone the other beats hardest for
+Inside this place is warm
+Outside it starts to pour
+
+Comin' down
+One love, two mouths
+One love, one house
+No shirt, no blouse
+Just us, you find out
+Nothing that I wouldn't wanna tell you about
+No, no, no
+
+'Cause it's too cold for you here
+And now, so let me hold
+Both your hands in the holes of my sweater
+'Cause it's too cold for you here
+And now, so let me hold
+Both your hands in the holes of my sweater, woah
+
+Woah, woah, woah
+Woah, woah, woah, woah
+Woah, woah
+Woah, woah, woah, woah
+Woah, woah
+
+'Cause it's too cold for you here
+And now, so let me hold
+Both your hands in the holes of my sweater
+'Cause it's too cold for you
+Now, let me hold
+Both your hands in the holes of my sweater
+
+And it's too cold, it's too cold
+The holes of my sweater`,
+
+    // ── Курносов Владимир ── (тексты есть в анкете и в старом файле)
+    33: `Призрачно всё в этом мире бушующем, 
+Есть только миг, за него и держись. 
+Есть только миг между прошлым и будущим, 
+Именно он называется жизнь.
+
+Вечный покой сердце вряд ли обрадует, 
+Вечный покой — для седых пирамид. 
+А для звезды, что сорвалась и падает, 
+Есть только миг, ослепительный миг.
+
+Пусть этот мир вдаль летит сквозь столетия, 
+Но не всегда по дороге мне с ним. 
+Чем дорожу, чем рискую на свете я? 
+Мигом одним, только мигом одним.
+
+Счастье дано повстречать иль беду ещё, 
+Есть только миг, за него и держись. 
+Есть только миг между прошлым и будущим, 
+Именно он называется жизнь.`,
+    34: `Моей душе покоя нет:
+Весь день я жду кого-то.
+Без сна встречаю я рассвет,
+И все из-за кого-то.
+
+Со мною нет кого-то,
+Ах, где найти кого-то?
+Могу весь мир я обойти,
+Чтобы найти кого-то.
+Чтобы найти кого-то,
+Могу весь мир я обойти...
+
+О вы, хранящие любовь
+Неведомые силы!
+Пусть невредим вернется вновь
+Ко мне мой кто-то милый.
+
+Но нет со мной кого-то,
+Мне грустно отчего-то.
+Клянусь, я все бы отдала
+На свете за кого-то!
+На свете за кого-то,
+Клянусь, я все бы отдала...
+`,
+    35: `Застоялся мой поезд в депо.
+Снова я уезжаю. Пора…
+На пороге ветер заждался меня.
+На пороге осень — моя сестра.
+
+После красно-желтых дней начнется и кончится зима.
+Горе ты мое от ума, не печалься, гляди веселей.
+И я вернусь домой со щитом, а, может быть, на щите,
+В серебре, а, может быть, в нищете, но как можно скорей.
+
+Расскажи мне о тех, кто устал
+От безжалостных уличных драм
+И о храме из разбитых сердец
+И о тех, кто идет в этот храм.
+
+После красно-желтых дней начнется и кончится зима.
+Горе ты мое от ума, не печалься, гляди веселей.
+И я вернусь домой со щитом, а, может быть, на щите,
+В серебре, а, может быть, в нищете, но как можно скорей.
+
+А мне приснилось: миром правит любовь,
+А мне приснилось: миром правит мечта.
+И над этим прекрасно горит звезда,
+Я проснулся и понял — беда…
+
+После красно-желтых дней начнется и кончится зима.
+Горе ты мое от ума, не печалься, гляди веселей.
+И я вернусь домой со щитом, а, может быть, на щите,
+В серебре, а, может быть, в нищете, но как можно скорей.`,
+
+    // ── Определённо может быть ──
+    36: `Говорят одна ночь ничего не изменит
+Кроме чисел календаря
+По их лицам гуляют тени сомнений
+Мне в окне улыбнулась заря
+Лектор скажет с экрана, что я бездельник
+Но даст шанс мне опять и опять
+Он заботать предмет нам свой доверил
+Мне бы доверие не потерять
+Эта ночь будет долгой самой
+Эта ночь - борьба со сном
+Я не знаю полпрограммы
+И начать пришлось с основ
+Я молюсь сейчас вместе с мамой
+Лишь бы в этот раз пронесло
+Я уверен - все кончится драмой
 И жалею об одном, что
-
-Так редко ходили на лекции,
-А если ходили, то спали.
-Так быстро колотится сердце,
+Так редко ходили на лекции
+А если ходили то спали
+Так быстро колотится сердце
 И сегодня самый главный экзамен!
 
-И я сдам его — меня хранят,
-Семер, лектор, райгор за мной стоят.
-Мои друзья наперебой кричат,
-И вся семья хочет отмечать.
-У меня всё получится,
-Всё точно будет доучено.
-Школа, парта, университет —
-За спиной моей много лет.
-
-И эта ночь — до утра!
-Сотни лекций на икс два — до утра!
-Техе по лабе отчёт — до утра!
-Делать домашку в ГК — до утра!
-Кофе — лучший друг мой — до утра!
-Боталка теперь мой дом — до утра!
-Несколько минут всего — до утра!
-Ну всё, я пошёл, мне пора.
+И я сдам его - меня хранят
+Семер, лектор, Райгор за мной стоят
+Мои друзья наперебой кричат
+И вся семья хочет отмечать
+У меня всё получится
+Всё точно будет доучено
+Школа, парта, университет 
+За спиной моей много лет
+И эта ночь - до утра!
+Сотни лекций на икс два - до утра!
+Техать по лабе отчет - до утра!
+Делать домашку в ГК - до утра!
+Кофе лучший друг мой - до утра
+Боталка теперь мой дом - до утра!
+Несколько минут всего - до утра!
+Ну всё, я пошел, мне пора
 Ни пуха ни пера!
 
-К утру руку свело и в глазах потемнело,
-Шпоры прячу в подглазных мешках.
-Уже рассвело и раскрасилось небо,
-Халяву позвал, а она не пришла.
-
-Лектор скажет с укором, что я бездельник,
-Но даст шанс мне билет поменять.
-Это снова никак не исправит проблему —
+К утру руку свело и в глазах потемнело
+Шпоры прячу в подглазных мешках
+Уже рассвело и раскрасилось небо
+Халяву позвал, а она не пришла
+Лектор скажет с укором, что я бездельник
+Но даст шанс мне билет поменять
+Это снова никак не исправит проблему 
 То, что не знаю, мне как рассказать?
-
-Мой ответ будет долгий самый,
-Доказательство с основ.
+Мой ответ будет долгий самый
+Доказательство с основ
 Не дождусь от вас пощады
-И определю число:
+И определю число
 Сколько вам формализма надо?
 Сколько надо вам общих слов?
-Был уверен, что кончится драмой,
-Но я выхожу с отлом.
-
-И так редко ходили на диско,
+Был уверен, что кончится драмой
+Но я выхожу с отлом
+И так редко ходили на диско
 И там ботали, не танцевали!
-Так быстро колотится сердце,
-И прошёл самый главный экзамен!
+Так быстро колотится сердце
+И прошел самый главный экзамен!
 
-И я сдал его — меня хранят,
-Семер, лектор, райгор — за мной стоят.
-Мои друзья наперебой кричат,
-И вся семья готова отмечать.
-И у вас всё получится,
-Всё точно будет доучено.
+И я сдал его - меня хранят
+Семер, лектор, Райгор - за мной стоят
+Мои друзья наперебой кричат
+И вся семья готова отмечать
+И у вас всё получится
+Всё точно будет доучено
 Но это завтра, а пока
-Мы отдыхаем до утра!
-
-Видели ночь — до утра!
-Гуляли всю ночь — до утра!
-Пачка сигарет и Цой — до утра!
-Песни, танцы и балет — до утра!
-От коробки до НК — до утра!
-Кричать и распевать — до утра!
-Пенная вечеринка — до утра!
-Ну всё, я пошёл, мне пора.
+Мы отдыхаем до утра! 
+Видели ночь - до утра!
+Гуляли всю ночь - до утра!
+Пачка сигарет и Цой - до утра!
+Песни, танцы и балет - до утра!
+От коробки до НК - до утра!
+Кричать и распевать - до утра!
+Пенная вечеринка - до утра!
+Ну всё, я пошел, мне пора
 На НК!
 
-— Ром, ты чё тут один сидишь? Пойдём на НК!
-— Не, не могу — к матану готовлюсь. Ещё два билета осталось.
-— Ну Ром, я ещё даже не начинал.
-— Голову не дури — пойдём.
-— Ай, давай.
-
-Видели ночь — до утра!
-Гуляли всю ночь — до утра!
-Пачка сигарет и Цой — до утра!
-Песни, танцы и балет — до утра!
-От коробки до НК — до утра!
-Кричать и распевать — до утра!
-Пенная вечеринка — до утра!
-Ну всё, я пошёл, мне пора.
-На НК!`
-            },
-            {
-                id: 58,
-                artist: "Определённо может быть",
-                title: "Полетим",
-                author: "авторская",
-                lyrics: `[Куплет]
-Так в жизни бывает, что всё надоело подряд.
-Рвёшься сбежать далеко, и нету силы молчать.
-Расправить крылья и закрыть глаза,
-Испытать невесомость и вновь жизнь с чистого листа начать.
-Надо лишь окунуться в необъятное море фантазии,
-Полетать, как умеют птицы, и забыть про формальности.
-Побывать во всём мире, на концах Европы и Азии,
-Стереть все границы — свобода и эмоций разнообразие.
-
-Давай, давай мы забудем всё,
-Что мучило нас тогда.
-Стихия вмиг унесёт —
-Там проведём года.
-И на мгновенье глаза
-Закроем и я, и ты.
-Доверимся ветру —
-Да, мы не боимся высоты.
-
-[Припев]
-Хей, да, мы уже летим,
-Куда ещё не знаю я.
-Будем с тобой светить:
-Я — солнце, ты — луна.
-Сейчас прямо тут стоим,
-Земле мы скажем — пока!
-Секунда пройдёт, смотри —
-Навстречу облакам!
-Будто бы полетим,
-Куда ещё не знаю я.
-Будем с тобой светить:
-Ты — солнце, я — луна.
-Сейчас прямо тут стоим,
-Земле мы скажем — пока!
-Секунда пройдёт, смотри —
-Навстречу облакам!
-
-[Куплет]
-Давай убежим от этих проблем
-На другую звезду, на другую планету, там, где тепло и свет.
-Говорят, хорошо, где нас нет.
-Облетим мы галактики и вселенную за сотни и тысячи лет.
-Никуда нам друг от друга не деться,
-Я не брошу тебя никогда.
-Надо вспомнить счастливое детство,
-Чтобы вдаль улететь на века.
-Для других мы покажемся странными,
-Но, позабыв про земные дела,
-Мы летим над городами и странами.
-Далеко же нас судьба завела.
-
-Давай, давай мы забудем всё,
-Что мучило нас тогда.
-Стихия вмиг унесёт —
-Там проведём года.
-И на мгновенье глаза
-Закроем и я, и ты.
-Доверимся ветру —
-Да, мы не боимся высоты.
-
-[Припев]
-Хей, да, мы уже летим (да, мы улетим),
-Куда ещё не знаю я (и нам по пути).
-Будем с тобой светить:
-Я — солнце, ты — луна (мы полетим).
-Сейчас прямо тут стоим (да, мы улетим),
-Земле мы скажем — пока! (ну-ка, погоди).
-Секунда пройдёт, смотри —
-Навстречу облакам (мы полетим).
-Будто бы полетим,
-Куда ещё не знаю я.
-Будем с тобой светить:
-Ты — солнце, я — луна.
-Сейчас прямо тут стоим,
-Земле мы скажем — пока!
-Секунда пройдёт, смотри —
-Навстречу облакам!`
-            },
-            {
-                id: 57,
-                artist: "Определённо может быть",
-                title: "Ненадолго",
-                author: "авторская",
-                lyrics: `[Куплет]
-Поезда и самолёты,
-Переписки без конца.
-Я ищу: ну где ты, что ты?
+Видели ночь - до утра!
+Гуляли всю ночь - до утра!
+Пачка сигарет и Цой - до утра!
+Песни, танцы и балет - до утра!
+От коробки до НК - до утра!
+Кричать и распевать - до утра!
+Пенная вечеринка - до утра!
+Ну всё, я пошел, мне пора
+На НК!`,
+    37: `Поезда и самолёты
+Переписки без конца
+Я ищу, ну где ты, что ты
 Как вообще твои дела?
-Встретимся за поворотом —
-Вероятность высока.
+Встретимся за поворотом
+Вероятность высока
 Смотрят на меня с укором
-Склеенные зеркала.
-Наше небо стало тонким,
-Забываю, как дышать.
-Растрепались кудри звонко —
-Их теперь не собирать.
-Между нами дни и ночи,
-Хаос и смятение.
-Я устал от заморочек,
-Я устала от тебя.
+Склеенные зеркала
+Наше небо стало тонким
+Забываю, как дышать
+Растрепались кудри звонко
+Их теперь не собирать
+Между нами дни и ночи
+Хаос и смятение
+Я устал от заморочек
+Я устала от тебя
 
-[Припев]
-Мы расстались ненадолго,
-Мы расстались навсегда.
-Пусть унесёт обиды Волга —
-Я никогда не забуду тебя.
-Между нами искр столько,
-Между нами города.
-Звонки и письма — всё без толку,
-Шум бежит по проводам.
+Мы расстались не надолго
+Мы расстались навсегда
+Пусть унесёт обиды Волга
+Я никогда не забуду тебя
+Между нами искр столько
+Между нами города
+Звонки и письма всё без толку
+Шум бежит по проводам
 
-[Куплет]
-Я устал от этих мыслей,
-Бесконечных перед сном.
-Строки стягиваю песней —
-Ими весь исписан стол.
-Перебрал воспоминаний —
-Ностальгия хмелем бьёт.
+Я устал от этих мыслей
+Бесконечных перед сном
+Строки стягиваю песней 
+Ими весь исписан стол
+Перебрал воспоминаний
+Ностальгия хмелем бьёт
 Расплескается в стакане
-Всё, что было, и что ждёт.
-Шлёшь открытки без деталей,
-Когда кончились слова.
-Ничего не обещаю,
-Пропадаешь без звонка.
-Поезда и самолёты,
-Переписки без конца.
-Я ищу: ну где ты, что ты?
+Всё, что было, и что ждёт
+Шлёшь открытки без деталей
+Когда кончились слова
+Ничего не обещаю
+Пропадаешь без звонка 
+Поезда и самолёты
+Переписки без конца
+Я ищу, ну где ты, что ты
 Как вообще твои дела?
 
-[Припев]
-Мы расстались ненадолго,
-Мы расстались навсегда.
-Пусть унесёт обиды Волга —
-Я никогда не забуду тебя.
-Между нами искр столько,
-Между нами города.
-Звонки и письма — всё без толку,
-Шум бежит по проводам.`
-            }
-        ];
+Мы расстались не надолго
+Мы расстались навсегда
+Пусть унесёт обиды Волга
+Я никогда не забуду тебя
+Между нами искр столько
+Между нами города
+Звонки и письма всё без толку
+Шум бежит по проводам
+
+Мы расстались не надолго
+Мы расстались навсегда
+Пусть унесёт обиды Волга
+Я никогда не забуду тебя
+Между нами искр столько
+Между нами города
+Звонки и письма всё без толку
+Шум бежит по проводам`,
+    38: `Этим летом не хватает солнца,
+И я снова замучена бессонницей.
+Я думаю, однажды всё наладится.
+Послушай моё сердце — оно бьётся.
+
+Я иду по улице слоняться,
+Вдруг что-то случится, мне не верится.
+Воскресенье — без пяти двенадцать,
+И я так хотел с тобою встретиться.
+
+Мне нравится, как смотрится твоё лицо,
+Я предложу тебе на днях увидеться.
+Ты скажешь, что ты уезжаешь в пятницу,
+А вечером на буднях как-то склеится.
+
+Но дождь будет идти до четверга,
+И вместе с ним прольётся вся правда.
+Мы с тобой не встретились вчера,
+И мы с тобой не встретимся завтра.
+
+Я уже вижу наш с тобой финал,
+Хоть у нас даже не было старта.
+Я думаю, я просто размечтался,
+А дождь будет идти до четверга.
+
+Я полгода дома и ни шагу из,
+Ведь тебя не встретив, я расстроюсь.
+Где-то в небе твой самолёт завис
+Или просто не доехал поезд.
+
+Я порой ищу твой взгляд в толпе,
+Какого цвета у тебя глаза.
+Может, что-нибудь не так во мне,
+Или я тебя придумал сам.
+
+И я готов рискнуть, чтобы, как во снах,
+И сегодня мы с тобою встретимся.
+Я думаю начать с чистого листа,
+Смотрю прогноз погоды с понедельника.
+
+Но дождь будет идти до четверга,
+И вместе с ним прольётся вся правда.
+Мы с тобой не встретились вчера,
+И мы с тобой не встретимся завтра.
+
+Я уже вижу наш с тобой финал,
+Хоть у нас даже не было старта.
+Я думаю, я просто размечтался,
+А дождь будет идти до четверга.`,
+    39: `Я хочу вставать с тобою, Солнце,
+Каждой утренней зарёй,
+Наблюдать, как мир смеётся
+Над тобой и надо мной.
+
+Ты коснулось меня лишь слегка,
+Открыв глаза, я увидел твой прищур.
+Ты коснулось, и зардела щека,
+Я нашёл — то, что многие ищут.
+
+Хмурым дням ты не видишь конца,
+В облаках ветер северный свищет,
+Прядь волос он откинет с лица,
+Я нашла — то, что многие ищут.
+
+Я хочу вставать с тобою, Солнце,
+Каждой утренней зарёй,
+Наблюдать, как мир смеётся
+Над тобой и надо мной.
+
+Время снова несёт холода,
+Вой метелей на улице слышен,
+Но твой блеск сквозь узоры окна —
+Я нашёл — то, что многие ищут.
+
+Без этих слёз не растают снега,
+И капель не заплачет под крышей.
+Ты согреешь меня, обещай,
+Я нашла — то, что многие ищут.
+
+Я хочу вставать с тобою, Солнце,
+Каждой утренней зарёй,
+Наблюдать, как мир смеётся
+Над тобой и надо мной.
+
+Я возьму тебя на руки,
+Унесу за горизонт,
+Чтобы после тьмы разлуки
+Ты прервало вновь мой сон.
+
+Я хочу вставать с тобою, Солнце,
+Каждой утренней зарёй,
+Наблюдать, как мир смеётся
+Над тобой и надо мной.
+
+Я хочу вставать с тобою, Солнце,
+Просыпаться до зари.
+Всё, что связано с тобою, бьётся,
+Сплетено в моей груди.`,
+
+    // ── Матвеев Николай ──
+    40: `Я знаю точно, куда течет река,
+Я знаю точно, зачем растут цветы,
+Куда прячет утро три тысячи звезд,
+Не считая голубой луны.
+
+Откуда ветер приносит облака,
+И как до солнца добраться налегке,
+Но, если ты спросишь меня о любви,
+Я не знаю, что сказать тебе.
+
+Это за окном рассвет, это города весной,
+Это одинокий свет, зовущий за собой.
+Это только ты и я где-то на краю земли
+Отпускаем в небеса воздушные шары.
+
+Я видел чудо и был в такой дали,
+Где даже лето приходит в декабре,
+Но, если ты спросишь меня о любви,
+Я не знаю, что сказать тебе.
+
+Это за окном рассвет, это города весной,
+Это одинокий свет, зовущий за собой.
+Это только ты и я где-то на краю земли
+Отпускаем в небеса воздушные шары.`,
+
+    // ── Мордвинова Алина, Лабутина Людмила ──
+    41: `Снова от меня ветер злых перемен
+Тебя уносит,
+Не оставив мне даже тени взамен,
+И он не спросит:
+Может быть, хочу улететь я с тобой
+Жёлтой осенней листвой,
+Птицей за синей мечтой.
+
+Позови меня с собой,
+Я приду сквозь злые ночи.
+Я отправлюсь за тобой,
+Что бы путь мне ни пророчил.
+Я приду туда, где ты
+Нарисуешь в небе солнце,
+Где разбитые мечты
+Обретают снова силу высоты.
+
+Сколько я искала тебя сквозь года
+В толпе прохожих,
+Думала, ты будешь со мной навсегда,
+Но ты уходишь.
+Ты теперь в толпе не узнаешь меня;
+Только, как прежде, любя,
+Я отпускаю тебя.
+
+Позови меня с собой,
+Я приду сквозь злые ночи.
+Я отправлюсь за тобой,
+Что бы путь мне ни пророчил.
+Я приду туда, где ты
+Нарисуешь в небе солнце,
+Где разбитые мечты
+Обретают снова силу высоты.
+
+Каждый раз, как только спускается ночь
+На спящий город,
+Я бегу из дома бессонного прочь
+В тоску и холод.
+Я ищу среди снов безликих тебя,
+Но в двери нового дня
+Я вновь иду без тебя.
+
+Позови меня с собой,
+Я приду сквозь злые ночи.
+Я отправлюсь за тобой,
+Что бы путь мне ни пророчил.
+Я приду туда, где ты
+Нарисуешь в небе солнце,
+Где разбитые мечты
+Обретают снова силу высоты.
+
+Позови меня с собой,
+Я приду сквозь злые ночи.
+Я отправлюсь за тобой,
+Что бы путь мне ни пророчил.
+Я приду туда, где ты
+Нарисуешь в небе солнце,
+Где разбитые мечты
+Обретают снова силу высоты.`,
+    42: `Белая ночь сиреней листву
+Ветер качает то робкий то смелый
+В белую ночь в час когда я усну
+Приснится мне сон удивительно белый
+
+Птица взмахнет волшебным крылом
+И я появленье твое угадаю
+В белую ночь мы с тобою уйдем
+Куда я не знаю куда я не знаю
+
+Белая ночь опустилась как облако
+Ветер гадает на юной листве
+Слышу знакомую речь вижу облик твой
+Ну почему это только во сне
+
+Белая ночь опустилась как облако
+Ветер гадает на юной листве
+Слышу знакомую речь вижу облик твой
+Ну почему это только во сне
+
+Краска зари небесная высь
+Жаль что виденья мои все короче
+Сон повторись я прошу повторись
+Но так коротки эти белые ночи
+
+В сердце одну надежду таю
+И восходящему дню улыбаюсь
+Верю что я не во сне наяву
+С тобой повстречаюсь с тобой повстречаюсь
+
+Белая ночь опустилась как облако
+Ветер гадает на юной листве
+Слышу знакомую речь вижу облик твой
+Ну почему это только во сне
+
+Белая ночь опустилась как облако
+Ветер гадает на юной листве
+Слышу знакомую речь вижу облик твой
+Ну почему это только во сне
+
+Белая ночь опустилась как облако
+Ветер гадает на юной листве
+Слышу знакомую речь вижу облик твой
+Ну почему это только во сне
+
+Белая ночь опустилась как облако
+Ветер гадает на юной листве
+Слышу знакомую речь вижу облик твой
+Ну почему это только во сне`,
+    43: `Все напоминает о тебе
+А ты нигде
+Остался мир, который вместе видел нас
+В последний раз
+
+Комната с балконом и окно
+Светла сейчас
+Чиста как день, который вместе видел нас
+В последний раз
+
+Время пройдет и ты забудешь все, что было
+С тобой у нас, с тобой у нас
+Нет, я не жду тебя, но знай, что я любила
+В последний раз
+В последний раз
+В последний раз
+В последний раз
+
+Дни пройдут, не знаю сколько зим,
+И сколько лет
+Быть может я смогу быть счастлива с другим,
+А, может, нет.
+
+Пусть ничто не вечно под луной
+Но ни на час
+Я не забуду дня, когда ты был со мной
+В последний раз
+
+Время пройдет и ты забудешь все, что было
+С тобой у нас,
+с тобой у нас
+Нет, я не жду тебя, но знай, что я любила
+В последний раз
+В последний раз
+В последний раз
+В последний раз
+
+Время пройдет и ты забудешь все, что было
+С тобой у нас,
+с тобой у нас
+Нет, я не жду тебя, но знай, что я любила
+В последний раз
+В последний раз
+В последний раз
+В последний раз
+В последний раз`,
+    44: `Я искала тебя годами долгими,
+Искала тебя дворами тёмными,
+В журналах, в кино, среди друзей.
+В день, когда нашла, с ума сошла.
+Ты совсем как во сне.
+Совсем как в альбомах,
+Где я рисовала тебя гуашью.
+Дальше были звонки, ночные больше.
+Слёзы, нервы, любовь и стрелки в Польше.
+Дети, но не мои, и старые зазнобы.
+Куришь каждые пять, мы устали оба.
+Ты совсем как во сне.
+Совсем как в альбомах,
+Где я рисовала тебя гуашью.
+Годами долгими.
+Ночами тёмными.
+Годами долгими.
+Ты совсем как во сне.
+Совсем как в альбомах,
+Где я рисовала тебя гуашью.
+Ты совсем как во сне.
+Совсем как в альбомах,
+Где я рисовала тебя гуашью.
+Я искала тебя годами долгими.
+Искала тебя дворами тёмными.
+В журналах, в кино годами долгими,
+Искала тебя ночами-чами-чами.`,
+
+    // ── Норец Илья ── (тексты есть в анкете и в старом файле)
+    45: `Вместо тепла — зелень стекла,
+Вместо огня — дым.
+Из сетки календаря выхвачен день.
+Красное солнце сгорает дотла,
+День догорает с ним,
+На пылающий город падает тень.
+
+Перемен требуют наши сердца,
+Перемен требуют наши глаза.
+В нашем смехе, и в наших слезах,
+И в пульсации вен:
+«Перемен! Мы ждем перемен!»
+
+Электрический свет продолжает наш день,
+И коробка от спичек пуста.
+Но на кухне синим цветком горит газ.
+Сигареты в руках, чай на столе — эта схема проста,
+И больше нет ничего, все находится в нас.
+
+Перемен требуют наши сердца,
+Перемен требуют наши глаза.
+В нашем смехе, и в наших слезах,
+И в пульсации вен:
+«Перемен! Мы ждем перемен!»
+
+Мы не можем похвастаться мудростью глаз
+И умелыми жестами рук,
+Нам не нужно все это, чтобы друг друга понять.
+Сигареты в руках, чай на столе — так замыкается круг,
+И вдруг нам становится страшно что-то менять.
+
+Перемен требуют наши сердца,
+Перемен требуют наши глаза.
+В нашем смехе, и в наших слезах,
+И в пульсации вен:
+«Перемен! Мы ждем перемен!»`,
+    46: `Замученный дорогой, я выбился из сил
+И в доме лесника я ночлега попросил
+С улыбкой добродушной старик меня впустил
+И жестом дружелюбным на ужин пригласил (хэй!)
+Будь как дома, путник, я ни в чём не откажу
+Я ни в чём не откажу, я ни в чём не откажу (хэй!)
+Множество историй, коль желаешь, расскажу
+Коль желаешь, расскажу, коль желаешь, расскажу
+На улице темнело, сидел я за столом
+Лесник сидел напротив, болтал о том, о сём
+Что нет среди животных у старика врагов
+Что нравится ему подкармливать волков (хэй!)
+Будь как дома, путник, я ни в чём не откажу
+Я ни в чём не откажу, я ни в чём не откажу (хэй!)
+Множество историй, коль желаешь, расскажу
+Коль желаешь, расскажу, коль желаешь, расскажу
+И волки среди ночи завыли под окном
+Старик заулыбался и вдруг покинул дом
+Но вскоре возвратился с ружьём наперевес
+"Друзья хотят покушать, пойдём, приятель, в лес!"
+Будь как дома, путник, я ни в чём не откажу
+Я ни в чём не откажу, я ни в чём не откажу (хэй!)
+Множество историй, коль желаешь, расскажу
+Коль желаешь, расскажу, коль желаешь, расскажу`,
+    47: `Я стараюсь никого не обижать и быть хорошим,
+Даже за глаза человека не оскорблю.
+Даже мнение чужое уважаю, предположим,
+Только я никого не люблю.
+
+А люди любят: они стоят с букетами в метро,
+Как будто ждали свидания целый год.
+Люди любят хрусталь и столовое серебро,
+Достают на юбилей, покупают коньяк и торт.
+Люди любят, хватают гантели, крутят педали,
+По утрам терпеливо выгуливают собак.
+Вы думали, люди не любят? Не угадали…
+Люди любят, да ещё как!
+
+Мне стало жутко! Спасите Русь!
+Повсюду бабочки и розовые пони.
+Жизнь — это шутка, и я смеюсь…
+Хотя на самом деле юмора не понял.
+Все в мою сторону смотрят и молчат,
+А я в карманы прячу мокрые ладони.
+Я самозванец, и меня наверняка разоблачат.
+
+А люди любят и доказать это могли бы:
+Для чего иначе людям карате и борьба?
+Люди любят: они кому-то дуют на ушибы
+И температуру мерят поцелуями лба.
+Люди любят: готовят сюрпризы, везут заказы,
+Вяжут варежки и шапки, чтобы кто-то не мёрз.
+Послушайте, ведь если добывают алмазы,
+Значит, на кольца с камнями есть спрос.
+
+Мне стало жутко! Спасите Русь!
+Повсюду бабочки и розовые пони.
+Жизнь — это шутка, и я смеюсь…
+Хотя на самом деле юмора не понял.
+В это мгновенье кто-то был зачат,
+А я потею в переполненном вагоне,
+И романтические песни из динамиков звучат.
+
+Ох уж эти люди! Ох уж эти люди!
+Ох уж эти люди! Ох уж эти люди!
+Ох уж эти люди! Ох уж эти люди!
+Ох уж эти люди! Ох уж эти люди!`,
+
+    // ── Парфенова Аня, Чирков Гоша ──
+    48: `-`,
+
+    // ── Первакова Тамара ──
+    49: `Можно я спрошу, а ты ответишь,
+Что тебе мешало в этот вечер.
+Стыд — это не повод загоняться,
+Говорю себе, пока иду вдоль пруда.
+Наша дружба в новом свете,
+Жду, пока ты мне ответишь.
+Так бывает в жизни с каждым,
+Говорю себе, пока сажусь на трамвай.
+
+Я выпила слишком много
+«Тёмного козла»,
+Хотела тебя обнять,
+Смотрела тебе в глаза.
+Торговый центр «Columbus»
+Из нашего окна,
+В квартире твоего друга
+Я буду спать одна.
+
+Ведь я выпила слишком много
+«Тёмного козла»,
+Хотела тебя обнять,
+Смотрела тебе в глаза.
+Торговый центр «Columbus»
+И песни Noize MC,
+В квартиру твоего друга
+Мы вызвали такси.
+
+Если бы на месяц пораньше
+Или на два месяца позже,
+Ты бы не смог удержаться,
+Мы бы сразу отправились далеко.
+Но я тебе звоню через стену:
+Хочешь, пойдём к магазину,
+Ведь люди уже на пробежках,
+А у нас закончилась вся вода.
+
+Я выпила слишком много
+«Тёмного козла»,
+Хотела тебя обнять,
+Смотрела тебе в глаза.
+Торговый центр «Columbus»
+Из нашего окна,
+В квартире твоего друга
+Я буду спать одна.
+
+Ведь я выпила слишком много
+«Тёмного козла»,
+Хотела тебя обнять,
+Смотрела тебе в глаза.
+Торговый центр «Columbus»
+И песни Noize MC,
+В квартиру твоего друга
+Мы вызвали такси.`,
+    50: `Тихо лужи покрывает лёд, помнишь, мы с тобою
+Целовались ночи напролёт под шум прибоя?
+Это лето не вернуть уже, я знаю,
+Но когда печаль в моей душе, я вспоминаю…
+
+Яхта, парус, в этом мире только мы одни,
+Ялта, август, и мы с тобою влюблены.
+Яхта, парус, в этом мире только мы одни,
+Ялта, август, и мы с тобою влюблены.
+
+Но расстаться нам с тобой пришлось, кончилась путёвка,
+И вагон плацкартный меня нёс в Новую Каховку.
+Не забуду ночи при луне и твою улыбку,
+Ты открытку подарила мне, а на той открытке…
+
+Яхта, парус, в этом мире только мы одни,
+Ялта, август, и мы с тобою влюблены.
+Яхта, парус, в этом мире только мы одни,
+Ялта, август, и мы с тобою влюблены.
+
+Яхта, парус, в этом мире только мы одни,
+Ялта, август, и мы с тобою влюблены.`,
+
+    // ── Полозов Дмитрий ──
+    51: `Я уже давно потерял счет дням
+Сколько их прошло уже не знаю и сам
+И почти не жду, что найду ответ
+Ты была реальной или это мой бред
+Я тебя создал по обрывкам снов
+С чистого листа рисуя эту любовь
+И в какой то миг ощутив твой пульс
+Думал, это сон, и так жалел, что проснусь
+Но каждый день, каждый прожитый час
+Я видел небо в глубине твоих глаз
+И если это просто мой бред
+Я буду в нем жить, никому не открыв секрет
+А если ты дана мне в награду
+То что еще мне может быть надо
+Ведь я живу теперь, только если ты рядом
+Если ты со мной, я могу дышать
+Если ты со мной, жива моя душа
+Каждый новый вдох для тебя одной
+Сердце бьется вновь, если ты со мной
+Если ты со мной, мир меняет цвет
+И других возможных вариантов нет
+Каждый новый вдох для тебя одной
+Нас ведет любовь, если ты со мной
+Со мной
+Если ты со мной
+Со мной
+Время для меня прекратило свой бег
+Мы вдвоём укрылись в нашем мире от всех
+Он был создан только для нас двоих
+В нём светило солнце глаз бездонных твоих
+Страх пришёл ко мне с появлением снов
+Я думал, что усну и мы не встретимся вновь
+И мир пошёл ко дну и я сорвался вниз
+Ты ушла, оставив мне нетронутый лист
+Но каждый день, каждый прожитый час
+Я буду помнить этот цвет твоих глаз
+И верить в то, что холод и боль
+Плата за то, чтоб однажды прийти за мной
+Ты же знаешь, ты - моё солнце
+Без тебя мой мир не проснётся
+И я устану быть, если ты не вернёшься
+Если ты со мной, я могу дышать
+Если ты со мной жива моя душа
+Каждый новый вдох для тебя одной,
+Сердце бьется вновь, если ты со мной
+Если ты со мной мир меняет цвет
+И других возможных вариантов нет
+Каждый новый вдох для тебя одной
+Нас ведет любовь, если ты со мной
+Если ты со мной, я могу дышать
+Если ты со мной жива моя душа
+Каждый новый вдох для тебя одной
+Сердце бьется вновь, если ты со мной
+Если ты со мной мир меняет цвет
+И других возможных вариантов нет
+Каждый новый вдох для тебя одной
+Нас ведет любовь, если ты со мной
+Со мной
+Со мной
+Если ты со мной`,
+    52: `Кто я такой?
+Ты не ждала, но я здесь
+Встать на пути твоём - значит
+Увидеть и умереть
+Но просто смотреть стоит дороже
+Чем знать, что ты хочешь уйти
+Я одинокий айсберг
+Принадлежащий тебе
+Рядом с тобой, оу-е
+Я начинаю дышать
+И моё холодное море
+Теплеет с каждой волной
+О, знала бы ты, как мне грустно
+Что я могу предложить
+Я — одинокий айсберг
+Ты — вся моя жизнь
+Не уплывай
+Или плыви, но знай, что
+Там за горизонтом остался
+Вечно дрейфующий лёд
+И он тебя ждёт
+Где-то в немой темноте
+Есть одинокий айсберг
+Принадлежащий тебе
+Рядом с тобой, оу-е
+Я начинаю дышать
+И моё холодное море
+Теплеет с каждой волной
+О, знала бы ты, как мне грустно
+Что я могу предложить
+Я — одинокий айсберг
+Ты — вся моя жизнь
+Для тебя я могу растаять
+Ртутью серебристой
+Встать и в тот же миг
+Закипеть и испариться
+Для тебя превратиться в полночь
+Звёзды отражая
+Всю тебя наполнить...
+Для тебя я могу растаять
+Ртутью серебристой
+Встать и в тот же миг
+Закипеть и испариться
+Для тебя превратиться в полночь
+Звёзды отражая
+Всю тебя наполнить
+Только для тебя
+Рядом с тобой, оу-е
+Я начинаю дышать
+И моё холодное море
+Теплеет с каждой волной
+О, знала бы ты, как мне грустно
+Что я могу предложить
+Я — одинокий айсберг
+Ты — вся моя жизнь
+Я — одинокий айсберг
+Ты — вся моя жизнь`,
+    53: `Голову в коробке пластмассовой вместе с телефоном, ключами и паспортом
+Рентгеном в сканере просветят ласково в целях безопасности государственной
+И обратно вряд ли пришьют уже:
+Руки ищут затылки над обрубками шей;
+Туловища жмутся грудными клетками к стенам —
+Не видно из контейнера, что там с телом.
+Лента с монотонным гулом коробку тащит —
+И для тулова тоже подыщут ящик:
+Станет стан обезглавленный, в нём лежащий,
+Почти покойником, почти настоящим.
+Кто-то, может быть, даже помянет на сорок дней...
+...Всё как у людей.
+Всё как у людей.
+А девочка из конной полиции
+С белым айфоном на белом жеребце
+Ждёт в «Инстаграме» лайка от принца
+И ждёт от Чёрной пятницы низких цен.
+Мерно цокают копытца по улице,
+Винтят демонстрантов мальчики-коллеги,
+Обсуждают рецепты подружки-умницы
+В недозаблокированной «телеге».
+Она завтра купит в «Меге» наборчик Lego
+Для племянника на его рожденья день.
+В наборе — автозак и три человека:
+Двое ментов на одного — всё как у людей.
+Всё, как у людей...
+Всё как у людей.
+Всё как у людей.
+СМИ голосят, что повсюду агенты МИ-6, ЦРУ и Моссада —
+Пугают исчадием ада звёздно-полосато-носато-пейсатым.
+Лёд под ногами майора ломается легче, чем корка фалафеля:
+Майор не боится, майор не утонет — майор, если что, в батискафе.
+Ты слышишь, как скрепы скрипят и жужжат старомодным дабстепом?
+Это снова, словно Челубей с Пересветом, насмерть бьются Совдеп с Госдепом.
+А чтобы чужие боялись, своих посильнее бей...
+Всё как у людей.
+Всё как у людей.
+Слышь, не нагнетай, перестань:
+Если кипиш реальный начнётся — что будет, представь!
+Если тут тебе неймётся, так пиздуй в Пиндостан —
+Хули ты всё надрываешься? В натуре, достал!
+От дерьма на вентиляторе дышать не легче —
+Лишь охота респираторы прижать покрепче.
+Без тебя хватает смрада — орать легко!
+Все знают, как не надо, как быть — никто.
+Политшапито, медиаклоунада:
+У каждой хламидомонады — ума палата
+И на всё — свои взгляды.
+А ты что-то пиздишь многовато нам тут
+Для заложника режима, сука, с кляпом во рту!
+Протест невзатяг, бунт в соцсетях,
+Пляски под чужую дудку на чужих костях —
+Лучше бы шишек газпромовских развлекал
+По жирным заказникам в шикарных особняках.
+Мир однокомнатных квартир с совмещённым санузлом,
+Микрофон за сто рублей, самопальное музло —
+Ты же выбрался оттуда? Значит, повезло!
+Так фильтруй базар и множь на счету число.
+Уютная коробка мещанского райка —
+Лубочные картинки про счастье дурака.
+Типичные сюжеты — культуры суррогат:
+Душонка — по дешёвке, а шкура — дорогá.
+Но ты давай вон спроси у своих детей,
+Где их папа нужней: в сводках новостей,
+Чтоб ноги об него вытирать по телику,
+Или в коридоре, чтоб сиденье поднять у велика?
+Скучно, что ли, живётся без пиздюлей?
+Пока кормят — ешь, пока поят — пей...
+Всё как у людей.
+Всё как у людей.
+Всё как у людей.
+Всё как у людей.`,
+
+    // ── Рыжкова Екатерина ──
+    54: `Белая гвардия, белый снег,
+Белая музыка революций.
+Белая женщина, нервный смех,
+Белого платья слегка коснуться.
+Белой рукой распахнуть окно,
+Белого света в нем не видя.
+Белое выпить до дна вино,
+В красную улицу в белом выйти.
+
+Когда ты вернешься,
+Все будет иначе, и нам бы узнать друг друга,
+Когда ты вернешься,
+А я не жена и даже не подруга.
+Когда ты вернешься,
+Ко мне, так безумно тебя любившей в прошлом,
+Когда ты вернешься –
+Увидишь, что жребий давно и не нами брошен.
+
+Сизые сумерки прошлых лет
+Робко крадутся по переулкам.
+В этом окне еле брезжит свет,
+Ноты истрепаны, звуки гулки.
+Тонкие пальцы срывают аккорд...
+Нам не простят безрассудного дара.
+Бьются в решетку стальных ворот
+Пять океанов земного шара.
+
+Красный трамвай простучал в ночи,
+Красный закат догорел в бокале,
+Красные-красные кумачи
+С красных деревьев на землю упали.
+Я не ждала тебя в октябре,
+Виделись сны, я листала сонник:
+Красные лошади на заре
+Били копытами о подоконник.
+
+Когда ты вернешься,
+Все будет иначе, и нам бы узнать друг друга,
+Когда ты вернешься,
+А я не жена и даже не подруга.
+Когда ты вернешься,
+Вернешься в наш город обетованный,
+Когда ты вернешься –
+Такой невозможный и такой желанный?`,
+    55: `
+На прокуренной стойке подвального бара
+Лежат гримуар и святая вода
+И эта история кажется старой
+Но она повторяется с нами всегда
+
+Тысячи лет мы с тобой, дорогая
+Кружимся в танце взаимных убийств
+Будто бы вальс между адом и раем
+Танцуют ведьма и экзорцист
+
+Я на тебя насылала проклятья
+Шрамы, что ты мне оставил, горят
+И пока я растворяюсь в объятьях
+В стакане твоём растворяется яд
+Моя дорогая, я всё ещё помню
+Хотя за сто лет, правда, можно забыть
+Если ты смотришь в глаза мне так томно
+Значит, что здесь ничего нельзя пить
+
+Тысячи лет мы с тобой, дорогая
+Кружимся в танце взаимных убийств
+Будто бы вальс между адом и раем
+Танцуют ведьма и экзорцист
+Тысячи лет мы с тобой, дорогая
+Кружимся в танце взаимных убийств
+Будто бы вальс между адом и раем
+Танцуют ведьма и экзорцист
+
+Может однажды попробовать снова
+Нам чуть подольше потанцевать
+Ведь мы оба знаем волшебное слово
+Но захотим ли его мы сказать
+
+Тысячи лет мы с тобой, дорогая
+Кружимся в танце взаимных убийств
+Будто бы вальс между адом и раем
+Танцуют ведьма и экзорцист`,
+    56: `
+Дедушка Мороз, пишу тебе песню.
+Письма не доходят - я послал сорок.
+Может сорок семь, я не помню, честно,
+Где-нибудь на почте лежит ворох.
+Помнишь, я просил у тебя велик,
+Космолет и бензопилу "Дружба"?
+Но тебе тогда не хватило денег,
+Вот, пишу сказать, что уже не нужно.
+
+Кто-то говорил, что тебя нету,
+Но я же помню ты приходил как-то,
+Приносил мешок, в нем были конфеты.
+А потом ушел в папиных тапках.
+Я тогда просил тебя, чтобы
+Коршунова Светка сидела рядом
+И любила чтобы меня до гроба.
+Ну в общем это тоже теперь не надо.
+
+Так что отмени все мои буквы.
+У меня желанье теперь другое.
+Ты же тоже был молодой-глупый,
+Ты же тоже пел по дворам Цоя.
+Тоже полагал, что курить круто.
+Тоже не носил во дворе шапку
+Дедушка Мороз, если не трудно -
+К сыну приходи, одолжу тапки.`,
+
+    // ── Федоров Иван ── (тексты 57–60 есть в анкете; 60 в старом файле не было)
+    57: `Молчи, тебя просто нет.
+Я тебя выдумал сам.
+Ты - звон золотых монет,
+Ими полон пустой карман.
+С тобой тепло и светло,
+С тобою я сыт и свят.
+И искренне, всем назло,
+Ты веришь, что я богат.
+
+Молчи, тебя просто нет.
+Ты - не больше чем дым, -
+Дым от моих сигарет,
+Дешевых "Ватр" и "Прим",
+Девочка с флейтой...
+
+
+Странно, но все равно,
+Я верю, что ты рядом со мной.
+Даже слышу твое тепло,
+И коснуться могу рукой.
+Ты хочешь уйти - постой!
+Что мне нужно еще? -
+Миг - восхититься тобой,
+Пока пальцы не опечет.
+
+Уходишь? - Уже рассвет.
+Если что, ты найдешь меня здесь.
+Приходи, какой тебя нет,
+И какая ты есть,
+Девочка с флейтой...
+
+
+Пусть рядом с тобой будет Моцарт!
+Пусть рядом с тобой будет флейта,
+Оле Лукойе, любимая кукла и Лето.
+И синее небо, и тысяча разных чудес,
+Маленькая Королева с Небес!`,
+    58: `Смотрят сосны сверху строго,
+Под ногами даль и ширь,
+А у нас лежит дорога
+Прямиком в Сибирь. (Эх!)
+
+Если ноги не сотрутся
+И не заржавеет мозг,
+Мы дойдём, доплывём, доползём
+До тебя, город Омск, город Омск, город Омск.
+
+Кто-то пьёт компот из рога,
+Кто-то в чай кладёт имбирь,
+Ну а нам легла дорога
+Прямиком в Сибирь.
+
+Если ноги не сотрутся
+И не заржавеет мозг,
+Мы дойдём, (мы дойдём), доплывём, доползём
+До тебя, город Омск, город Омск, город Омск.
+До тебя, город Омск, город Омск, город Омск.
+До тебя, город Омск, город Омск, город Омск.
+Омск, Омск, Омск.
+
+Пусть осталось сил немного —
+Это, братцы, не беда,
+Лишь бы вывела дорога
+Сами знаете куда.
+
+Если ноги не сотрутся
+И не заржавеет мозг,
+Мы дойдём, (мы дойдём), доплывём, доползём
+До тебя, город Омск, город Омск, город Омск!
+
+Если ноги не сотрутся
+И не заржавеет мозг,
+Мы дойдём, доплывём, доползём, (эх!)
+До тебя, город Омск, город Омск, город Омск.
+До тебя, город Омск, город Омск, город Омск, (Омск)
+До тебя, город Омск, город Омск, город Омск.
+(Мы дойдём!) Омск, Омск, Омск.`,
+    59: `Говорят, что миром правит дождь,
+Льёт так непрерывно.
+Ты не заметишь, как уснёшь
+Под его переливы.
+
+Что нас ждёт за стеной
+Летнего дождя?
+Он пройдёт и тепло
+Вдруг спасёт тебя,
+Тебя…
+
+Говорят, что миром правим мы,
+Ты не верь в эти слухи.
+Просто кто-то, глядя с высоты,
+Вновь и вновь нам протягивает руки.
+
+Что нас ждёт за стеной
+Летнего дождя?
+Он пройдёт и тепло
+Вдруг спасёт тебя,
+Тебя…
+
+Говорят, что миром правит дождь…
+Ты не заметишь, как уснёшь…
+
+Что нас ждёт за стеной
+Летнего дождя?
+Он пройдёт и тепло
+Вдруг спасёт тебя,
+Тебя…`,
+    60: `Похождения лесного муравья
+Иль удача Мухи-Цокотухи:
+Кто тростиночку найдёт, кто три рубля,
+Кто-то — смерть под каблуком старухи.
+
+А невидимый при свете,
+Непонятный в темноте,
+Светлячок тихонько светит
+В непроглядной тишине.
+
+А невидимый при свете,
+Непонятный в темноте,
+Светлячок тихонько светит
+В непроглядной тишине.
+
+Можно бегать по хозяйскому столу
+Иль сверчать всю жизнь за тёплой печкой;
+Можно просто мерять воду на пруду
+Или в мае падать с ветки на крылечко.
+
+А невидимый при свете,
+Непонятный в темноте,
+Светлячок тихонько светит
+В непроглядной тишине.
+
+А невидимый при свете,
+Непонятный в темноте,
+Светлячок тихонько светит
+В непроглядной тишине.`
+};
 
         // =============================================================
         // ЛОГИКА
         // =============================================================
 
+        function timeToMinutes(t) {
+            const [h, m] = t.split(':').map(Number);
+            return h * 60 + m;
+        }
+
+        function buildSchedule() {
+            return ARTISTS.map(a => {
+                const override = TIME_OVERRIDES[a.id];
+                let displayTime = a.time;
+                let oldTime = null;
+
+                if (override) {
+                    if (override.strike) {
+                        oldTime = a.time;
+                        displayTime = override.newTime;
+                    } else {
+                        displayTime = override.newTime;
+                    }
+                }
+
+                return {
+                    ...a,
+                    displayTime,
+                    oldTime,
+                    sortKey: timeToMinutes(displayTime)
+                };
+            }).sort((x, y) => x.sortKey - y.sortKey);
+        }
+
         function renderSchedule(filter = '') {
             const container = document.getElementById('schedule');
-            const filtered = SCHEDULE.filter(item =>
+            const list = buildSchedule();
+            const filtered = list.filter(item =>
                 item.name.toLowerCase().includes(filter.toLowerCase())
             );
 
             if (filtered.length === 0) {
                 container.innerHTML =
-                    `<div style="text-align:center;color:rgba(255,255,255,0.15);padding:40px;">Ничего не найдено</div>`;
+                    `<div style="text-align:center;color:rgba(247,237,224,0.35);padding:40px;">Ничего не найдено</div>`;
                 return;
             }
 
             let html = '';
             filtered.forEach(item => {
-                const isGroup = item.name === "Каменный Лев" || item.name === "Определённо может быть";
+                const timeHtml = item.oldTime
+                    ? `<div class="time-block">
+                           <div class="time-old">${item.oldTime}</div>
+                           <div class="time-main">${item.displayTime}</div>
+                       </div>`
+                    : `<div class="time-block">
+                           <div class="time-main">${item.displayTime}</div>
+                       </div>`;
+
                 html += `
-                    <div class="row" onclick="openSongs('${item.name}')">
-                        <div class="time">${item.time}</div>
+                    <div class="row" onclick="openSongs(${item.id})">
+                        ${timeHtml}
                         <div class="name">${item.name}</div>
-                        ${isGroup ? '<span class="badge">★ группа</span>' : ''}
+                        ${item.isGroup ? '<span class="badge">группа</span>' : ''}
                     </div>
                 `;
             });
@@ -2562,39 +2802,57 @@ I got a lump in my throat 'cause you're gonna sing the words wrong`
 
         function goHome() {
             document.getElementById('pageMain').classList.remove('hidden');
-            document.getElementById('searchInput').parentElement.style.display = 'block';
+            document.getElementById('searchBox').style.display = 'block';
             document.getElementById('pageSongs').classList.add('hidden');
             document.getElementById('pageLyrics').classList.add('hidden');
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
-        function openSongs(artistName) {
+        function openSongs(artistId) {
+            const artist = ARTISTS.find(a => a.id === artistId);
+            if (!artist) return;
+
             document.getElementById('pageMain').classList.add('hidden');
-            document.getElementById('searchInput').parentElement.style.display = 'none';
+            document.getElementById('searchBox').style.display = 'none';
             document.getElementById('pageSongs').classList.remove('hidden');
             document.getElementById('pageLyrics').classList.add('hidden');
 
-            document.getElementById('artistTitle').textContent = artistName;
+            document.getElementById('artistTitle').textContent = artist.name;
 
-            const songs = SONGS.filter(s => s.artist === artistName);
+            const songs = SONGS.filter(s => s.artist_id === artistId);
             const list = document.getElementById('songsList');
 
             if (songs.length === 0) {
                 list.innerHTML =
-                    `<div style="color:rgba(255,255,255,0.15);padding:20px;">У этого исполнителя пока нет песен</div>`;
-                return;
+                    `<div style="color:rgba(247,237,224,0.35);padding:20px;">У этого исполнителя пока нет песен</div>`;
+            } else {
+                let html = '';
+                songs.forEach((s, i) => {
+                    html += `
+                        <div class="song fade" onclick="openLyrics(${s.id})">
+                            <div class="num">${i + 1}</div>
+                            <div>
+                                <div class="title">${s.title}</div>
+                                <div class="author">${s.author}</div>
+                            </div>
+                        </div>
+                    `;
+                });
+                list.innerHTML = html;
             }
 
-            let html = '';
-            songs.forEach((s, i) => {
-                html += `
-                    <div class="song" onclick="openLyrics(${s.id})">
-                        <div class="title">${i + 1}. ${s.title}</div>
-                        <div class="author">${s.author}</div>
-                    </div>
-                `;
-            });
-            list.innerHTML = html;
+            const linksBox = document.getElementById('linksBox');
+            if (artist.links && artist.links.length > 0) {
+                let linksHtml = `<div class="links-box fade"><div class="links-title">Ссылки</div>`;
+                artist.links.forEach(l => {
+                    linksHtml += `<a href="${l.url}" target="_blanks" rel="noopener">${l.label}</a>`;
+                });
+                linksHtml += `</div>`;
+                linksBox.innerHTML = linksHtml;
+            } else {
+                linksBox.innerHTML = '';
+            }
+
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
@@ -2614,8 +2872,12 @@ I got a lump in my throat 'cause you're gonna sing the words wrong`
             document.getElementById('lyricTitle').textContent = song.title;
             document.getElementById('lyricAuthor').textContent = song.author;
 
-            const text = song.lyrics && song.lyrics.trim() !== '' ? song.lyrics : '📝 Текст пока не добавлен.';
-            document.getElementById('lyricText').textContent = text;
+            // Если текста нет — заглушка «Название — Автор»
+            const text = LYRICS[songId];
+            const output = (text && text.trim() !== '')
+                ? text
+                : `${song.title} — ${song.author}`;
+            document.getElementById('lyricText').textContent = output;
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
@@ -2623,6 +2885,7 @@ I got a lump in my throat 'cause you're gonna sing the words wrong`
         // ЗАПУСК
         // =============================================================
 
+        createLeaves();
         renderSchedule();
 
         document.getElementById('searchInput').addEventListener('keydown', e => {
